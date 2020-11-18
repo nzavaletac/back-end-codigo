@@ -47,3 +47,32 @@ for i in range(10):
     if i == 5:
         continue
     print(i)
+
+# while => es un bucle infinito hasta que la condicion deje de ser cierta
+variable=True
+while variable:
+    print('a')
+    variable=False
+# en python no hay do ni switch case
+
+# i=0
+# while i<10:
+#     i += 1
+# Ingresar 10 valores por teclado y almacenarlos en una lista y luego que me diga cuantos son pares y cuantos son impares
+numeros = []
+numeroPar = 0
+numeroImpar = 0
+for i in range(10):
+    numero = int(input("Ingrese el numero {}: ".format(i+1)))
+    if numero % 2 == 0:
+        numeroPar += 1
+    else:
+        numeroImpar += 1
+    numeros.append(numero)
+print("Hay {} numeros pares".format(numeroPar))
+print("Hay {} numeros impares".format(numeroImpar))
+
+# OPERADOR TERNARIO
+# resultado = rpta_si if condicion else rpta_no
+# resutado = 5 if 11 % 2 == 0 else 10
+# print(resutado)
