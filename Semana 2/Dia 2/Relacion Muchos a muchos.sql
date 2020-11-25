@@ -60,3 +60,18 @@ insert into t_alumno_curso (alum_id, cur_id) values
 							(2,3),(5,3), # todos los de cuarto llevan Matematica II
 							(2,5),(5,5), # todos los de cuarto llevan Biologia
 							(3,1),(3,3); # todos los de primero llevan Matematica I y Matematica II
+
+# hacer una sentencia para que me muestre : 
+# nombre_alumno(Nombre)		apellido_alumno(Apellido)		nombre_curso(Curso)
+# select alum_nom as 'Nombre del alumno' from t_alumno;
+
+SELECT Alumno.alum_nom as Nombre, Alumno.alum_ape as Apellido, Curso.cur_nom as Curso from t_alumno_curso as Puente 
+inner join t_alumno as Alumno on Puente.alum_id = Alumno.alum_id 
+inner join t_curso as Curso on Puente.cur_id = Curso.cur_id;
+
+
+# https://dev.mysql.com/doc/refman/8.0/en/string-functions.html
+# select year(alum_fecnac) from t_alumno;
+# traer todos los alumnos que nacieron entre 1992 y 1994
+
+SELECT * FROM t_alumno where year(alum_fecnac) >= 1992 and year(alum_fecnac) <= 1994;
