@@ -1,11 +1,11 @@
 use playa_estacionamiento;
 show tables;
 insert into t_vehiculo (veh_placa, veh_marca, veh_modelo, veh_color, veh_anio) values
-('V3A527','VOLKSWAGEN','TIGUAN','BLANCO','2018'),
-('ABC345','FORD','FIESTA','AMARILLO','2015'),
-('T4F567','RENAULT','KOLEOS','NEGRO','2018'),
-('AVF465','DAEWOO','TICO','AZUL','2016'),
-('GNB867','HIUNDAY','SANTA FE','NEGRO','2018');
+						('V3A527','VOLKSWAGEN','TIGUAN','BLANCO','2018'),
+						('ABC345','FORD','FIESTA','AMARILLO','2015'),
+						('T4F567','RENAULT','KOLEOS','NEGRO','2018'),
+						('AVF465','DAEWOO','TICO','AZUL','2016'),
+						('GNB867','HIUNDAY','SANTA FE','NEGRO','2018');
 
 insert into t_playa (playa_nomb, playa_capacidad) values 
 					('CALLE SAN FRANCISCO 204',30),
