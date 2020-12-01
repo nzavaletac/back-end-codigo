@@ -9,4 +9,10 @@ class LibroModel(bd.Model):
     edicion_libro = bd.Column('lib_edicion', bd.Date(), nullable=False)
     autor_libro = bd.Column('lib_autor', bd.Text)
     cantidad_libro = bd.Column('lib_cant', bd.Integer, nullable=False)
-    
+    prestamosLibro = bd.relationship('PrestamoModel', backref='libroPrestamo')
+
+    def __init__(self, nombre, edicion, cantidad, autor):
+        self.nombre_libro = nombre
+        self.edicion_libro = edicion
+        self.autor_libro = autor
+        self.cantidad_libro = cantidad

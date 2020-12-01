@@ -1,10 +1,14 @@
 from flask import Flask
 from base_de_datos import bd
+from models.libro import LibroModel
+from models.cliente import ClienteModel
+from models.prestamo import PrestamoModel
 # pip3 install mysqlclient
 app = Flask(__name__)
 # 'tipobd://usuario:password@servidor/nomb-bd'
 # https://flask-sqlalchemy.palletsprojects.com/en/2.x/config/#connection-uri-format
-app.config['SQLALCHEMY_DATABASE_URI']='mysql://root:root@localhost/libreriavirtual'
+# ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password by 'root';
+app.config['SQLALCHEMY_DATABASE_URI']='mysql://root:root@localhost:3306/libreriavirtual'
 
 @app.before_first_request
 def creacion_bd():
@@ -15,6 +19,8 @@ def creacion_bd():
     # Va a realizar la creación de todos los modelos definidos anteriormente
     bd.create_all(app=app)
 
-
+@app.route('/')
+def inicio():
+    return 'La API funciona exitosamente!'
 if __name__ == '__main__':
     app.run(debug=True)
