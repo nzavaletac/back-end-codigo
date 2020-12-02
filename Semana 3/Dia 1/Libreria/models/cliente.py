@@ -6,6 +6,7 @@ class ClienteModel(bd.Model):
     dni_cliente = bd.Column("cli_dni", bd.String(8), nullable = False)
     nombre_cliente = bd.Column("cli_nomb", bd.String(45), nullable = False)
     apellido_cliente = bd.Column("cli_ape", bd.String(45), nullable = False)
+    estado = bd.Column(bd.Boolean, default=True, nullable=False)
     # Sirve para hacer la relacion inversa
     prestamosCliente = bd.relationship('PrestamoModel', backref='clientePrestamo')
     

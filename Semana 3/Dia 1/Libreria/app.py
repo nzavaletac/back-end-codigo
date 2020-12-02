@@ -2,7 +2,7 @@ from flask import Flask
 from base_de_datos import bd
 from flask_restful import Api
 # from models.libro import LibroModel
-from controllers.libro import LibroController
+from controllers.libro import LibrosController, LibroController
 from models.cliente import ClienteModel
 from models.prestamo import PrestamoModel
 # pip3 install mysqlclient
@@ -23,7 +23,7 @@ def creacion_bd():
     # Inicio la aplicacion pasandole la instancia app que internamente va a buscar la llave SQLALCHEMY_DATABASE_URI y si la encuentra va a conectar con la base de datos
     bd.init_app(app)
     # Va a realizar la eliminacion de todos los modelos en mi base de datos
-    # bd.drop_all(app=app)
+    bd.drop_all(app=app)
     # Va a realizar la creación de todos los modelos definidos anteriormente
     bd.create_all(app=app)
 
@@ -33,7 +33,9 @@ def inicio():
 
 # Definiendo las rutas de mi aplicacion
 # en el add_resource van dos o mas parametros, obligatoriamente en el primero va el Recurso (comportamiento) y en el segundo o mas van las rutas de acceso 
-api.add_resource(LibroController, '/libro')
+
+api.add_resource(LibrosController, '/libro')
+api.add_resource(LibroController, '/libro/<int:id>')
 
 if __name__ == '__main__':
     app.run(debug=True)

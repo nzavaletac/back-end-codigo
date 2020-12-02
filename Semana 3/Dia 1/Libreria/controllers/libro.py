@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
 from models.libro import LibroModel
 
-class LibroController(Resource):
+class LibrosController(Resource):
     def get(self):
         resultado = LibroModel.query.all() # SELECT * FROM T_LIBRO
         respuesta = []
@@ -55,3 +55,86 @@ class LibroController(Resource):
             'ok':True
         }, 201
 
+class LibroController(Resource):
+    def get(self, id):
+        # SELECT * FROM T_LIBRO WHERE id_libro=id
+        # al usar el metodo first() va a devolver la primera coincidencia y ya no una lista, sino un objeto en concreto y si no cumple la condicion retorna None
+        resultado = LibroModel.query.filter_by(id_libro=id).first()
+        # devolver en el content todo el libro y si no hubiese indicar que no se encuentra ese libro con esa posicion con un status 404
+        if resultado:
+            # si hay un libro
+            return {
+                'ok': True,
+                'content': resultado.devolverJson(),
+                'message': None
+            }
+        else:
+            # no hay libro con ese id
+            return {
+                'ok': False,
+                'content': None,
+                'message': 'No existe ese libro'
+            }, 404
+    
+    def put(self, id):
+        resultado = LibroModel.query.filter_by(id_libro=id).first()
+        if resultado:
+            parseador = reqparse.RequestParser()
+            parseador.add_argument(
+                'nombre',
+                type=str,
+                required=False,
+                location='json',
+                help='Falta el campo nombre'
+            )
+            parseador.add_argument(
+                'edicion',
+                type=str,
+                required=False,
+                location='json',
+                help='Falta la edicion'
+            )
+            parseador.add_argument(
+                'autor',
+                type=str,
+                required=False,
+                location='json',
+                help='Falta el autor'
+            )
+            parseador.add_argument(
+                'cantidad',
+                type=int,
+                required=False,
+                location='json',
+                help='Falta la cantidad'
+            )
+            body = parseador.parse_args()
+            resultado.update(nombre=body['nombre'], edicion=body['edicion'], autor=body['autor'], cantidad=body['cantidad'] )
+            return {
+                'ok': True,
+                'content': resultado.devolverJson(),
+                'message':'Libro actualizado con exito'
+            }, 201
+
+        else:
+            return {
+                'ok': False,
+                'content': None,
+                'message': 'No existe ese libro'
+            }, 404
+    
+    def delete(self, id):
+        resultado = LibroModel.query.filter_by(id_libro=id).first()
+        if resultado:
+            resultado.delete()
+            return {
+                'ok': True,
+                'content':None,
+                'message': 'Se elimino exitosamente el Libro'
+            }
+        else:
+            return {
+                'ok': False,
+                'content': None,
+                'message': 'No existe ese libro'
+            }, 404
