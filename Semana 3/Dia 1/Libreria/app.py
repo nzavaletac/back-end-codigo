@@ -1,14 +1,22 @@
 from flask import Flask
 from base_de_datos import bd
-from models.libro import LibroModel
+from flask_restful import Api
+# from models.libro import LibroModel
+from controllers.libro import LibroController
 from models.cliente import ClienteModel
 from models.prestamo import PrestamoModel
 # pip3 install mysqlclient
+
 app = Flask(__name__)
+# Creo una instancia de mi clase Api en la cual le tengo que pasar la app para que pueda registrar posteriormente todas mis rutas con sus respectivos controladores, si no hago eso, todos los controladores registrados no se podrán usar
+api = Api(app)
+
 # 'tipobd://usuario:password@servidor/nomb-bd'
 # https://flask-sqlalchemy.palletsprojects.com/en/2.x/config/#connection-uri-format
 # ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password by 'root';
 app.config['SQLALCHEMY_DATABASE_URI']='mysql://root:root@localhost:3306/libreriavirtual'
+# sirve para evitar el warning de que la funcionalidad del sqlalchemy de track modification en un futuro estará deprecada
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS']= False
 
 @app.before_first_request
 def creacion_bd():
@@ -22,5 +30,10 @@ def creacion_bd():
 @app.route('/')
 def inicio():
     return 'La API funciona exitosamente!'
+
+# Definiendo las rutas de mi aplicacion
+# en el add_resource van dos o mas parametros, obligatoriamente en el primero va el Recurso (comportamiento) y en el segundo o mas van las rutas de acceso 
+api.add_resource(LibroController, '/libro')
+
 if __name__ == '__main__':
     app.run(debug=True)

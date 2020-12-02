@@ -16,3 +16,22 @@ class LibroModel(bd.Model):
         self.edicion_libro = edicion
         self.autor_libro = autor
         self.cantidad_libro = cantidad
+    
+    def save(self):
+        # crea la instanciacion en la base de datos (ingresa todos sus datos pero aun no se guardan)
+        bd.session.add(self)
+        # hace que los cambios ingresados sean permanentes (aca ya se guarda en la base de datos)
+        bd.session.commit()
+    
+    def __str__(self):
+        # este metodo magico permite sobreescribir la forma en la cual se lee el objeto en consola
+        return self.nombre_libro
+    
+    def devolverJson(self):
+        return {
+            'id': self.id_libro,
+            'nombre': self.nombre_libro,
+            'autor': self.autor_libro,
+            'edicion': str(self.edicion_libro),
+            'cantidad': self.cantidad_libro
+        }
