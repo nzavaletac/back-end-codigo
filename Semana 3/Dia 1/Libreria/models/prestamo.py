@@ -15,3 +15,16 @@ class PrestamoModel(bd.Model):
         self.fechfin_prestamo = fecha_fin
         self.cliente = cliente
         self.libro = libro
+
+    def save(self):
+        bd.session.add(self)
+        bd.session.commit()
+
+    def devolverJson(self):
+        return {
+            'id': self.id_prestamo,
+            'fecha_inicio': str(self.fechin_prestamo),
+            'fecha_fin': str(self.fechfin_prestamo),
+            'cliente': self.cliente,
+            'libro': self.libro
+        }

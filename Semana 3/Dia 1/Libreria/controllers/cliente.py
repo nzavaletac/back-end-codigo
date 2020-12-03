@@ -18,19 +18,22 @@ class ClientesController(Resource):
             'dni',
             required=True,
             type=str,
-            help='Falta el dni'
+            help='Falta el dni',
+            location='json'
         )
         parseador.add_argument(
             'nombre',
             required=True,
             type=str,
-            help='Falta el nombre'
+            help='Falta el nombre',
+            location='json'
         )
         parseador.add_argument(
             'apellido',
             required=True,
             type=str,
-            help='Falta el apellido'
+            help='Falta el apellido',
+            location='json'
         )
         respuesta = parseador.parse_args()
         cliente = ClienteModel(respuesta['dni'], respuesta['nombre'], respuesta['apellido'])
