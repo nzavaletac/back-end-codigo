@@ -23,7 +23,7 @@ def creacion_bd():
     # Inicio la aplicacion pasandole la instancia app que internamente va a buscar la llave SQLALCHEMY_DATABASE_URI y si la encuentra va a conectar con la base de datos
     bd.init_app(app)
     # Va a realizar la eliminacion de todos los modelos en mi base de datos
-    bd.drop_all(app=app)
+    # bd.drop_all(app=app)
     # Va a realizar la creación de todos los modelos definidos anteriormente
     bd.create_all(app=app)
 

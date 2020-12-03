@@ -34,7 +34,8 @@ class LibroModel(bd.Model):
             'nombre': self.nombre_libro,
             'autor': self.autor_libro,
             'edicion': str(self.edicion_libro),
-            'cantidad': self.cantidad_libro
+            'cantidad': self.cantidad_libro,
+            'estado': self.estado
         }
     
     def update(self, **kwargs):
@@ -47,7 +48,7 @@ class LibroModel(bd.Model):
         autor = kwargs.get('autor') if kwargs.get('autor') else self.autor_libro
         edicion = kwargs.get('edicion') if kwargs.get('edicion') else self.edicion_libro
         cantidad = kwargs.get('cantidad') if kwargs.get('cantidad') else self.cantidad_libro
-        print(nombre)
+        estado = kwargs.get('estado') if kwargs.get('estado') else self.estado
         # nombre = kwargs.get('nombre',self.nombre_libro)
         # autor = kwargs.get('autor', self.autor_libro)
         # edicion = kwargs.get('edicion', self.edicion_libro)
@@ -56,8 +57,14 @@ class LibroModel(bd.Model):
         self.autor_libro = autor
         self.edicion_libro= edicion
         self.cantidad_libro = cantidad
+        self.estado = estado
         self.save()
     
     def delete(self):
         bd.session.delete(self)
         bd.session.commit()
+    
+    def inhabilitarLibro(self):
+        self.estado = False
+        self.save()
+        # bd.session.commit()

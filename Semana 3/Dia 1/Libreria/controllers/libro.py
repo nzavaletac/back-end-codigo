@@ -13,6 +13,7 @@ class LibrosController(Resource):
             'content':respuesta,
             'message': None
         }
+    
     def post(self):
         parseador = reqparse.RequestParser()
         # una vez declarada la instancia de la clase RequestParser tengo que declarar que argumentos van a ser encargados de la validacion y todo argumento que no lo declare y me lo pase el front va a ser eliminado
@@ -50,9 +51,11 @@ class LibrosController(Resource):
         nuevoLibro = LibroModel(resultado['nombre'],resultado['edicion'],resultado['cantidad'],resultado['autor'])
         # hago que todos los cambios hechos sean almacenados en la bd
         nuevoLibro.save()
-        print(nuevoLibro.id_libro)
+        # print(nuevoLibro.id_libro)
         return {
-            'ok':True
+            'ok':True,
+            'message':'Libro creado con exito',
+            'content': nuevoLibro.devolverJson()
         }, 201
 
 class LibroController(Resource):
@@ -108,8 +111,14 @@ class LibroController(Resource):
                 location='json',
                 help='Falta la cantidad'
             )
+            parseador.add_argument(
+                'estado',
+                type=bool,
+                required=False,
+                location='json'
+            )
             body = parseador.parse_args()
-            resultado.update(nombre=body['nombre'], edicion=body['edicion'], autor=body['autor'], cantidad=body['cantidad'] )
+            resultado.update(nombre=body['nombre'], edicion=body['edicion'], autor=body['autor'], cantidad=body['cantidad'], estado=body['estado'] )
             return {
                 'ok': True,
                 'content': resultado.devolverJson(),
@@ -126,7 +135,7 @@ class LibroController(Resource):
     def delete(self, id):
         resultado = LibroModel.query.filter_by(id_libro=id).first()
         if resultado:
-            resultado.delete()
+            resultado.inhabilitarLibro()
             return {
                 'ok': True,
                 'content':None,
