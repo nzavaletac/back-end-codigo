@@ -25,6 +25,6 @@ class PrestamoModel(bd.Model):
             'id': self.id_prestamo,
             'fecha_inicio': str(self.fechin_prestamo),
             'fecha_fin': str(self.fechfin_prestamo),
-            'cliente': self.cliente,
-            'libro': self.libro
+            'cliente': self.clientePrestamo.devolverJson(),
+            'libro': self.libroPrestamo.devolverJson()
         }

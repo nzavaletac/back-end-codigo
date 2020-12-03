@@ -68,7 +68,7 @@ class LibroController(Resource):
             # si hay un libro
             return {
                 'ok': True,
-                'content': resultado.devolverJson(),
+                'content': resultado.devolverLibroPrestamos(),
                 'message': None
             }
         else:

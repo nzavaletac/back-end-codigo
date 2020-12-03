@@ -4,7 +4,7 @@ from flask_restful import Api
 # from models.libro import LibroModel
 from controllers.libro import LibrosController, LibroController
 # from models.cliente import ClienteModel
-from controllers.cliente import ClientesController
+from controllers.cliente import ClientesController, ClienteModel
 # from models.prestamo import PrestamoModel
 from controllers.prestamo import PrestamosController
 # pip3 install mysqlclient

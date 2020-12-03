@@ -37,7 +37,17 @@ class LibroModel(bd.Model):
             'cantidad': self.cantidad_libro,
             'estado': self.estado
         }
-    
+        
+    def devolverLibroPrestamos(self):
+        resultado = self.devolverJson()
+        prestamos = []
+        for prestamo in self.prestamosLibro:
+            # cada vuelta me va a devolver el prestamo segun su libro, si no hubiese ningun prestamo no me devuelve nada
+            prestamos.append(prestamo.devolverJson())
+        resultado['prestamos']= prestamos
+        return resultado
+
+
     def update(self, **kwargs):
         # el metodo get se usa para los diccionarios y se encarga de que de acuerdo a la llave que le pasemos (parametro 1) va a devolver su valor y opcionalmente como segundo parametro que le puede indicar que valor va a retornar si es que la llave indicada no existe
         print(kwargs)

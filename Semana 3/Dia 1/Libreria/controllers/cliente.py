@@ -6,7 +6,7 @@ class ClientesController(Resource):
         respuesta = ClienteModel.query.all()
         resultado = []
         for cliente in respuesta:
-            resultado.append(cliente.devolverJson())
+            resultado.append(cliente.devolverClientePrestamo())
         return {
             'ok':True,
             'content':resultado,
