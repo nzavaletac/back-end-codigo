@@ -14,3 +14,15 @@ class ClienteModel(bd.Model):
         self.dni_cliente = dni
         self.nombre_cliente = nombre
         self.apellido_cliente = apellido
+    
+    def devolverJson(self):
+        return {
+            'id': self.id_cliente,
+            'dni': self.dni_cliente,
+            'nombre': self.nombre_cliente,
+            'apellido': self.apellido_cliente,
+            'estado': self.estado
+        }
+    def save(self):
+        bd.session.add(self)
+        bd.session.commit()

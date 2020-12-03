@@ -3,7 +3,8 @@ from base_de_datos import bd
 from flask_restful import Api
 # from models.libro import LibroModel
 from controllers.libro import LibrosController, LibroController
-from models.cliente import ClienteModel
+# from models.cliente import ClienteModel
+from controllers.cliente import ClientesController
 from models.prestamo import PrestamoModel
 # pip3 install mysqlclient
 
@@ -36,6 +37,6 @@ def inicio():
 
 api.add_resource(LibrosController, '/libro')
 api.add_resource(LibroController, '/libro/<int:id>')
-
+api.add_resource(ClientesController, '/cliente')
 if __name__ == '__main__':
     app.run(debug=True)
