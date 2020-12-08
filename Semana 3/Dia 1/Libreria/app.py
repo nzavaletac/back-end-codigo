@@ -8,14 +8,21 @@ from controllers.cliente import ClientesController, ClienteModel
 # from models.prestamo import PrestamoModel
 from controllers.prestamo import PrestamosController
 # pip3 install mysqlclient
+from flask_cors import CORS
 
 app = Flask(__name__)
+# https://flask-cors.readthedocs.io/en/latest/
+# Para yo indicar que no me importa el dominio ni los metodos que puedan acceder (GET, POST...)
+cors = CORS(app=app)
+# si quiero indicar que origen puede acceder a mi api
+# cors = CORS(app=app, resources={"*":{"origins":"mipagina.com"}})
 # Creo una instancia de mi clase Api en la cual le tengo que pasar la app para que pueda registrar posteriormente todas mis rutas con sus respectivos controladores, si no hago eso, todos los controladores registrados no se podrán usar
 api = Api(app)
 
 # 'tipobd://usuario:password@servidor/nomb-bd'
 # https://flask-sqlalchemy.palletsprojects.com/en/2.x/config/#connection-uri-format
 # ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password by 'root';
+# app.config['SQLALCHEMY_DATABASE_URI']='mysql://l6zxcvrrj0cm88iu:xfrrsu45qiwoeqe0@ixnzh1cxch6rtdrx.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/donunmlf1bds77yz'
 app.config['SQLALCHEMY_DATABASE_URI']='mysql://root:root@localhost:3306/libreriavirtual'
 # sirve para evitar el warning de que la funcionalidad del sqlalchemy de track modification en un futuro estará deprecada
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']= False
