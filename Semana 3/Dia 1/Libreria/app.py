@@ -43,3 +43,19 @@ api.add_resource(PrestamosController, '/prestamo')
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+
+
+
+
+# INSERT INTO `libreriavirtual`.`t_cliente` (`cli_dni`, `cli_nomb`, `cli_ape`, `estado`) VALUES ('10735145', 'Eduardo', 'de Rivero', '1');
+# INSERT INTO `libreriavirtual`.`t_cliente` (`cli_dni`, `cli_nomb`, `cli_ape`, `estado`) VALUES ('15481526', 'Juan', 'Marquez', '1');
+# INSERT INTO `libreriavirtual`.`t_cliente` (`cli_dni`, `cli_nomb`, `cli_ape`, `estado`) VALUES ('57687902', 'Maria', 'Palacios', '1');
+# INSERT INTO `libreriavirtual`.`t_libro` (`lib_nom`, `lib_edicion`, `lib_autor`, `lib_cant`, `estado`) VALUES ('Winnie Pooh', '2020-02-01', 'Condorito', '2', '1');
+# INSERT INTO `libreriavirtual`.`t_libro` (`lib_nom`, `lib_edicion`, `lib_autor`, `lib_cant`, `estado`) VALUES ('Star wars', '2020-07-22', 'bryce', '5', '1');
+# INSERT INTO `libreriavirtual`.`t_libro` (`lib_nom`, `lib_edicion`, `lib_autor`, `lib_cant`, `estado`) VALUES ('Harry Potter', '2020-04-10', 'llosa', '3', '1');
+# INSERT INTO `libreriavirtual`.`t_prestamo` (`prestamo_fechin`, `prestamo_fechfin`, `prestamo_fechentrega`, `estado`, `cli_id`, `lib_id`) VALUES ('2020-12-03', '2020-12-05', '2020-12-05', '1', '1', '1');
+# INSERT INTO `libreriavirtual`.`t_prestamo` (`prestamo_fechin`, `prestamo_fechfin`, `prestamo_fechentrega`, `estado`, `cli_id`, `lib_id`) VALUES ('2020-12-06', '2020-12-07', '2020-12-07', '1', '1', '1');
+# INSERT INTO `libreriavirtual`.`t_prestamo` (`prestamo_fechin`, `prestamo_fechfin`, `estado`, `cli_id`, `lib_id`) VALUES ('2020-12-07', '2020-12-10', '1', '2', '3');
+# INSERT INTO `libreriavirtual`.`t_prestamo` (`prestamo_fechin`, `prestamo_fechfin`, `prestamo_fechentrega`, `estado`, `cli_id`, `lib_id`) VALUES ('2020-12-03', '2020-12-06', '2020-12-05', '1', '3', '2');
