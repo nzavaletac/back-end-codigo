@@ -1,5 +1,16 @@
 {% extends "base.html" %}
 {% block titulo_pagina %}Inicio{% endblock%}
 {% block informacion%}
-<p>Yo soy el inicio!</p>
+<div class="card">
+    <div class="card-body bg-secondary">
+        <p>{{usuario.usu_nom}} {{usuario.usu_ape}} </p>
+        <div class="container-fluid">
+            <div class="row">
+                {% for titulo in titulos %}
+                <div class="bg-light rounded-pill p-2 col-3">{{titulo}}</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock%}
