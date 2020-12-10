@@ -20,11 +20,14 @@ class ProductoModel(models.Model):
 
 class AlmacenModel(models.Model):
     almacenId = models.AutoField(primary_key=True, unique=True, null=False, db_column='alma_id')
-    almacenDescripcion = models.CharField(max_length=45, db_column='alma_desc')
+    almacenDescripcion = models.CharField(max_length=45, db_column='alma_desc', verbose_name='Descripcion del almacen')
     class Meta:
         db_table='t_almacen'
         verbose_name_plural = "Almacenes"
         verbose_name = "Almacen"
+        
+    def __str__(self):
+        return self.almacenDescripcion
 
 class ProductoAlmacenModel(models.Model):
     productoAlmacenId = models.AutoField(primary_key=True, unique=True, null=False, db_column='prod_alma_id')
@@ -38,4 +41,19 @@ class ProductoAlmacenModel(models.Model):
     class Meta:
         db_table='t_prod_alma'
 
-# registrar los otros modelos faltantes (CabeceraVentaMdel y DetalleVentaModel)
+class CabeceraVentaModel(models.Model):
+    cabeceraVentaId = models.AutoField(primary_key=True, unique=True, null=False, db_column='cabven_id')
+    cabeceraVentaFecha = models.DateTimeField(db_column='cabven_fecha')
+    cabeceraVentaTotal = models.DecimalField(max_digits=5, decimal_places=2, db_column='cabven_total')
+    cabeceraVentaNombre = models.CharField(max_length=45, db_column='cabven_nomb')
+    class Meta:
+        db_table='t_cabventa'
+
+class DetalleVentaModel(models.Model):
+    detalleVentaId = models.AutoField(primary_key=True, unique=True, null=False, db_column='detven_id')
+    detalleVentaCantidad = models.IntegerField(db_column='detven_cant')
+    detalleVentaSubTotal = models.DecimalField(max_digits=5, decimal_places=2, db_column='detven_subtotal')
+    cabeceraVentaId = models.ForeignKey(CabeceraVentaModel, on_delete=models.PROTECT, db_column='cabven_id', related_name='cabeceraVentas')
+    productoAlmacenId = models.ForeignKey(ProductoAlmacenModel, on_delete=models.PROTECT, db_column='prod_alma_id', related_name='productoAlmacenVentas')
+    class Meta:
+        db_table='t_detventa'
