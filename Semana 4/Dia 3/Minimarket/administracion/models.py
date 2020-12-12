@@ -10,6 +10,7 @@ class ProductoModel(models.Model):
     productoNombre = models.CharField(max_length=45, db_column='prod_nom')
     productoPrecio = models.DecimalField(max_digits=5, decimal_places=2, db_column='prod_prec')
     productoMinimo = models.IntegerField(db_column='prod_minimo')
+    estado = models.BooleanField(default=True)
     # para definir algunas opciones extras como el nombre de la tabla, ordenamiento y modificar opciones de visualizacion en el panel administrativo se crea una clase Meta
     class Meta:
         # esta clase sirve para pasar metadatos al padre , es decir como estamos heredando de la clase Model, le vamos a pasar configuracion a ese padre
