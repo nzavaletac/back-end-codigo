@@ -13,6 +13,7 @@ class ProductosView(ListCreateAPIView):
     # queryset es la consulta a la base de datos que se va a hacer para efectuar esa vista, utilizando ORM
     # serializer es la forma en la cual yo voy a decorar mi resultado para mostrarlo al cliente y tambien hace las validaciones para guardar en la base de datos
     queryset = ProductoModel.objects.all() # SELECT * FROM T_PRODUCTO
+    # https://www.django-rest-framework.org/api-guide/serializers/
     serializer_class = ProductoSerializer
     def get(self, request):
         respuesta = self.get_serializer(self.get_queryset(), many=True)
