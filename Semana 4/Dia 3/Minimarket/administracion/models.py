@@ -19,6 +19,9 @@ class ProductoModel(models.Model):
         verbose_name_plural = "Productos"
         verbose_name = "Producto"
 
+    def __str__(self):
+        return self.productoNombre
+
 class AlmacenModel(models.Model):
     almacenId = models.AutoField(primary_key=True, unique=True, null=False, db_column='alma_id')
     almacenDescripcion = models.CharField(max_length=75, db_column='alma_desc', verbose_name='Descripcion del almacen', help_text="aca va la descripcion del almacen")

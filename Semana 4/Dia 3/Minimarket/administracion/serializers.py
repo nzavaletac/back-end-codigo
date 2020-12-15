@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ProductoModel, AlmacenModel
+from .models import ProductoModel, AlmacenModel, ProductoAlmacenModel
 
 class ProductoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -23,6 +23,41 @@ class ProductoSerializer(serializers.ModelSerializer):
         return self.instance
 
 class AlmacenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AlmacenModel
+        fields = '__all__'
+
+class ProductoAlmacenSerializer(serializers.ModelSerializer):
+    almacen = AlmacenSerializer(source="almacenId", read_only=True)
+    # FORMA 1
+    producto = ProductoSerializer(source="productoId", read_only=True)
+    # FORMA 2
+    # cuando yo uso el mismo campo con su nombre que le voy a pasar como recurso al serializador ya no es necesario ponerlo como parametro del serializador
+    # productoId = ProductoSerializer(read_only=True)
+    class Meta:
+        model = ProductoAlmacenModel
+        fields = '__all__'
+        # FORMA 1
+        # para evitar que me muestre de nuevo ese productoId lo quito de la lista
+        # exclude = ['productoId', 'almacenId']
+
+# este serializador lo voy a usar para cuando quiera devolver de mis productos sus almacenes
+class ProductoAlmacenAlmacenVistaSerializer(serializers.ModelSerializer):
+    almacen = AlmacenSerializer(source="almacenId", read_only=True)
+    class Meta:
+        model = ProductoAlmacenModel
+        fields = ['almacen']
+
+# este serializador lo voy a usar para cuando quiera devolver de mis almacenes sus productos
+class ProductoAlmacenProductoVistaSerializer(serializers.ModelSerializer):
+    producto = ProductoSerializer(source="productoId", read_only=True)
+    class Meta:
+        model = ProductoAlmacenModel
+        fields = ['producto']
+
+class AlmacenSerializerMany(serializers.ModelSerializer):
+    # esto es una relacion inversa porque yo a partir del padre estoy devolviendo a todos sus hijos que le pertenecen y necesito para ello el campo related_name definido en la foreign key
+    productosAlmacen = ProductoAlmacenProductoVistaSerializer(source="almacenesProductos", many=True, read_only=True)
     class Meta:
         model = AlmacenModel
         fields = '__all__'

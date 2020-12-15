@@ -1,11 +1,11 @@
 # para evitar ese "error" del modelo debemos instalar la siguiente libreria
 # pip install pylint-django
 from django.shortcuts import render
-from .models import ProductoModel, AlmacenModel
+from .models import ProductoModel, AlmacenModel, ProductoAlmacenModel
 # https://www.django-rest-framework.org/api-guide/generic-views/
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
-from .serializers import ProductoSerializer, AlmacenSerializer
+from .serializers import ProductoSerializer, AlmacenSerializer, ProductoAlmacenSerializer, AlmacenSerializerMany
 from rest_framework import status
 # Create your views here.
 
@@ -84,7 +84,7 @@ class ProductoView(RetrieveUpdateDestroyAPIView):
 
 class AlmacenesView(ListCreateAPIView):
     queryset = AlmacenModel.objects.all() # si no pongo nada y lo dejo en objects va a retornar la sentencia SQL
-    serializer_class = AlmacenSerializer
+    serializer_class = AlmacenSerializerMany
     def post(self, request):
         respuesta = self.get_serializer(data=request.data)
         if respuesta.is_valid():
@@ -102,5 +102,37 @@ class AlmacenesView(ListCreateAPIView):
                 "content": respuesta.errors,
                 "message": "hubo un error al guardar el almacen"
             }, status.HTTP_400_BAD_REQUEST)
-        
 
+    def get(self, request):
+        almacenes = self.get_serializer(instance=self.get_queryset(), many=True)
+        return Response({
+            "ok":True,
+            "content": almacenes.data,
+            "message": None
+        })
+        
+class ProductosAlmacenesView(ListCreateAPIView):
+    queryset = ProductoAlmacenModel.objects.all()
+    serializer_class = ProductoAlmacenSerializer
+    def get(self, request):
+        prodalmas = self.get_serializer(instance=self.get_queryset(), many=True)
+
+        return Response({
+            "ok":True,
+            "content": prodalmas.data
+        })
+    def post(self, request):
+        #AL MOMENTO DE REGISTRAR EL ALMACENPRODUCTO, VALIDAR LO SIGUIENTE:
+        # * QUE EL PRODUCTO Y  EL ALMACEN EXISTA.
+        # * QUE EL PRODUCTO ESTE CON ESTADO TRUE Y LO MISMO CON EL ALMACEN (HACER LA MODIFICACION EN EL MODELO Y MIGRAR).
+        info = request.data 
+        # info['productoId']
+        # info['almacenId']
+        # HINT: USAR EL MODEL.objects.filter(pk=...).first()
+        producto = ProductoModel.objects.filter(productoId=info['productoId']).first()
+        print(producto.estado)
+        # almacen = AlmacenModel.objects.filter(..).first()
+        # producto.estado True o False
+        return Response({
+            "ok":True
+        })
