@@ -1,11 +1,11 @@
 # para evitar ese "error" del modelo debemos instalar la siguiente libreria
 # pip install pylint-django
 from django.shortcuts import render
-from .models import ProductoModel
+from .models import ProductoModel, AlmacenModel
 # https://www.django-rest-framework.org/api-guide/generic-views/
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
-from .serializers import ProductoSerializer
+from .serializers import ProductoSerializer, AlmacenSerializer
 from rest_framework import status
 # Create your views here.
 
@@ -81,3 +81,26 @@ class ProductoView(RetrieveUpdateDestroyAPIView):
             "content":respuesta.data,
             "message":"Se elimino el producto exitosamente"
         })
+
+class AlmacenesView(ListCreateAPIView):
+    queryset = AlmacenModel.objects.all() # si no pongo nada y lo dejo en objects va a retornar la sentencia SQL
+    serializer_class = AlmacenSerializer
+    def post(self, request):
+        respuesta = self.get_serializer(data=request.data)
+        if respuesta.is_valid():
+            # aca va a ir el guardado y la devolucion que todo fue exitoso
+            respuesta.save()
+            return Response({
+                "ok": True,
+                "content": respuesta.data,
+                "message": "se guardo correctamente el almacen"
+            },status.HTTP_201_CREATED)
+        else:
+            # aca va la lista de error que sucedieron al guardar ese almacen
+            return Response({
+                "ok":False,
+                "content": respuesta.errors,
+                "message": "hubo un error al guardar el almacen"
+            }, status.HTTP_400_BAD_REQUEST)
+        
+

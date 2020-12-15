@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ProductoModel
+from .models import ProductoModel, AlmacenModel
 
 class ProductoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -21,3 +21,8 @@ class ProductoSerializer(serializers.ModelSerializer):
         self.instance.estado = False
         self.instance.save()
         return self.instance
+
+class AlmacenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AlmacenModel
+        fields = '__all__'
