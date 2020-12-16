@@ -129,10 +129,30 @@ class ProductosAlmacenesView(ListCreateAPIView):
         # info['productoId']
         # info['almacenId']
         # HINT: USAR EL MODEL.objects.filter(pk=...).first()
-        producto = ProductoModel.objects.filter(productoId=info['productoId']).first()
-        print(producto.estado)
-        # almacen = AlmacenModel.objects.filter(..).first()
-        # producto.estado True o False
-        return Response({
-            "ok":True
-        })
+        productoAlmacenSerializado = self.get_serializer(data=info)
+        # print(productoAlmacenSerializado.is_valid())
+        # print(productoAlmacenSerializado.errors)
+        if productoAlmacenSerializado.is_valid():
+            # aca recien meto la logica de los estados y otros
+            producto = ProductoModel.objects.filter(productoId=info['productoId']).first()
+            almacen = AlmacenModel.objects.filter(almacenId=info['almacenId']).first()
+            print(producto.estado, almacen.estado)
+            if producto.estado == True and almacen.estado: # if producto.estado
+                productoAlmacenSerializado.save()
+                return Response({
+                    "ok":True,
+                    "content":productoAlmacenSerializado.data,
+                    "message": "Se agrego exitosamente el producto con almacen"
+                }, status.HTTP_201_CREATED)
+            else:
+                return Response({
+                    "ok":False,
+                    "content":None,
+                    "message":"No se logro ingresar correctamente los datos, producto o almacen no esta correctamente habilitado"
+                }, status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({
+                "ok": False,
+                "content": productoAlmacenSerializado.errors,
+                "message":"Hubo un error al registrar el producto almacen"
+            },status.HTTP_400_BAD_REQUEST)        

@@ -25,6 +25,7 @@ class ProductoModel(models.Model):
 class AlmacenModel(models.Model):
     almacenId = models.AutoField(primary_key=True, unique=True, null=False, db_column='alma_id')
     almacenDescripcion = models.CharField(max_length=75, db_column='alma_desc', verbose_name='Descripcion del almacen', help_text="aca va la descripcion del almacen")
+    estado = models.BooleanField(default=True)
     class Meta:
         db_table='t_almacen'
         verbose_name_plural = "Almacenes"
