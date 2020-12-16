@@ -37,6 +37,16 @@ class ProductoAlmacenSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductoAlmacenModel
         fields = '__all__'
+        # https://www.django-rest-framework.org/api-guide/serializers/#additional-keyword-arguments
+        # la configuracion adicional que yo le pueda poner a los campos de mi modelo se la pongo en el atributo llamado extra_kwargs, le puedo modificar parametros del mismo modelo como su longitud maxima (max_length) o logitud minima (min_length)
+        extra_kwargs = {
+            "productoId":{
+                "write_only":True
+            },
+            "almacenId": {
+                "write_only": True
+            }
+        }
         # FORMA 1
         # para evitar que me muestre de nuevo ese productoId lo quito de la lista
         # exclude = ['productoId', 'almacenId']

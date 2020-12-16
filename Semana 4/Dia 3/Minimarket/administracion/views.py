@@ -1,7 +1,7 @@
 # para evitar ese "error" del modelo debemos instalar la siguiente libreria
 # pip install pylint-django
 from django.shortcuts import render
-from .models import ProductoModel, AlmacenModel, ProductoAlmacenModel
+from .models import ProductoModel, AlmacenModel, ProductoAlmacenModel, CabeceraVentaModel
 # https://www.django-rest-framework.org/api-guide/generic-views/
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
@@ -116,29 +116,46 @@ class ProductosAlmacenesView(ListCreateAPIView):
     serializer_class = ProductoAlmacenSerializer
     def get(self, request):
         prodalmas = self.get_serializer(instance=self.get_queryset(), many=True)
-
         return Response({
             "ok":True,
             "content": prodalmas.data
         })
     def post(self, request):
-        # EJERCICIO: verificar si ya hay un registro de ese almacen con producto y traer la informacion  y modificarla (cantidad) con la nueva ingresada
         info = request.data 
         productoAlmacenSerializado = self.get_serializer(data=info)
         # print(productoAlmacenSerializado.is_valid())
         # print(productoAlmacenSerializado.errors)
         if productoAlmacenSerializado.is_valid():
             # aca recien meto la logica de los estados y otros
+            # primer metodo 
             producto = ProductoModel.objects.filter(productoId=info['productoId']).first()
+            # segundo metodo 
+            # validated_data es un diccionario que se crea a partir de pasarle una data y luego gracias al metodo is_valid() se crea esa data validada en la cual se corrobora que todas las llaves foraneas y todos los campos esten correctamente ingresados
+            # producto = productoAlmacenSerializado.validated_data['productoId'].estado
             almacen = AlmacenModel.objects.filter(almacenId=info['almacenId']).first()
-            print(producto.estado, almacen.estado)
+            # print(producto.estado, almacen.estado)
             if producto.estado == True and almacen.estado: # if producto.estado
-                productoAlmacenSerializado.save()
-                return Response({
-                    "ok":True,
-                    "content":productoAlmacenSerializado.data,
-                    "message": "Se agrego exitosamente el producto con almacen"
-                }, status.HTTP_201_CREATED)
+                # HINT: aca tienen que hacer el ejercicio
+                inventario = ProductoAlmacenModel.objects.filter(productoId=info['productoId'], almacenId=info['almacenId']).first()
+                if inventario:
+                    # voy a tener que sobreescribir mi productoalmacen
+                    # cuando yo uso el metodo update de mi serializador le tengo que pasar dos parametros, el primero es la instancia (el campo ya creado en mi base de datos que yo quiero actualizar) y el segundo es todo el contenido que yo quiero actualizar en mi base de datos y automaticamente ya hace el guardado en mi base de datos (implicitamente hace el save) por lo que yo no tengo que volver a usar el metodo save() sino se creará otra instancia de mi objeto creado
+                    # ESTA SERIA LA CONSULTA SQL: UPDATE t_productoalmacen set productoId=... , WHERE almacenId = inventario['almacenId'] and productoId = inventario['productoId]
+                    productoAlmacenSerializado.update(inventario, productoAlmacenSerializado.validated_data)
+                    return Response({
+                        "ok": True,
+                        "content": productoAlmacenSerializado.data,
+                        "message": "Se actualizo el productoalmacen con su nueva cantidad"
+                    })
+                else:
+                    # voy a tener que crear un nuevo productoalmacen
+                    # instance es ya la instancia de del productoalmacen creado, osea se crea una vez que yo ya agrege esa row a la base de datos, si yo no lo guardo, me retornara un None(vacio)
+                    productoAlmacenSerializado.save()
+                    return Response({
+                        "ok":True,
+                        "content":productoAlmacenSerializado.data,
+                        "message": "Se agrego exitosamente el producto con almacen"
+                    }, status.HTTP_201_CREATED)
             else:
                 return Response({
                     "ok":False,
@@ -151,3 +168,14 @@ class ProductosAlmacenesView(ListCreateAPIView):
                 "content": productoAlmacenSerializado.errors,
                 "message":"Hubo un error al registrar el producto almacen"
             },status.HTTP_400_BAD_REQUEST)        
+
+class CabeceraVentasView(ListCreateAPIView):
+    queryset = CabeceraVentaModel.objects.all()
+    # serializer_class = ....
+    def get(self, request):
+        # DEVOLVER TODAS LAS CABECERASVENTAS DE MI TABLA
+        return Response({
+            "ok":True
+        })
+    def post(self, request):
+        pass
