@@ -122,13 +122,8 @@ class ProductosAlmacenesView(ListCreateAPIView):
             "content": prodalmas.data
         })
     def post(self, request):
-        #AL MOMENTO DE REGISTRAR EL ALMACENPRODUCTO, VALIDAR LO SIGUIENTE:
-        # * QUE EL PRODUCTO Y  EL ALMACEN EXISTA.
-        # * QUE EL PRODUCTO ESTE CON ESTADO TRUE Y LO MISMO CON EL ALMACEN (HACER LA MODIFICACION EN EL MODELO Y MIGRAR).
+        # EJERCICIO: verificar si ya hay un registro de ese almacen con producto y traer la informacion  y modificarla (cantidad) con la nueva ingresada
         info = request.data 
-        # info['productoId']
-        # info['almacenId']
-        # HINT: USAR EL MODEL.objects.filter(pk=...).first()
         productoAlmacenSerializado = self.get_serializer(data=info)
         # print(productoAlmacenSerializado.is_valid())
         # print(productoAlmacenSerializado.errors)

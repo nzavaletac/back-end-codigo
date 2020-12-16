@@ -43,6 +43,11 @@ class ProductoAlmacenModel(models.Model):
     # DO_NOTHING => deja eliminar al padre y no elimina su valor del hijo, es decir se queda con esa llave aunque ya no exista, esto genera una mala integridad de los datos y crea errores al momento de devolver segun su padre
     productoId = models.ForeignKey(ProductoModel, on_delete=models.PROTECT, db_column='producto_id', related_name='productosAlmacenes')
     almacenId= models.ForeignKey(AlmacenModel, on_delete=models.PROTECT, db_column='alma_id', related_name='almacenesProductos')
+    # CAMPOS DE AUDITORIA
+    # auto_now_add sirve para que cuando se cree un nuevo registro(row) se almace automaticamente la fecha y hora del servidor en esa columna
+    # auto_now sirve para que cuando haya algun cambio en mi registro(row) se modifique con la fecha actual de mi servidor
+    createdAt = models.DateTimeField(db_column='fecCreacion', auto_now_add=True) 
+    updatedAt = models.DateTimeField(db_column='fecActualizacion', auto_now=True)
     class Meta:
         db_table='t_prod_alma'
 
