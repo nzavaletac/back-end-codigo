@@ -193,9 +193,60 @@ class VentaView(CreateAPIView):
     serializer_class = VentaSerializer
     def post(self, request):
         respuesta = self.get_serializer(data=request.data)
-        print(respuesta.is_valid(raise_exception=True))
-        print(respuesta.data)
+        respuesta.is_valid(raise_exception=True)
+        # print(respuesta.data['articulos'])
+        # banderaProductos = 0
+        # I aca yo valido si mi producto existe y si su estado esta como habilitado
+        for articulo in respuesta.data['articulos']:
+            # print(articulo['id'])
+            # VER SI EXISTEN LOS ARTICULOS SEGUN SU ID
+            producto = ProductoModel.objects.filter(productoId=articulo['id']).first()
+            # FORMA 1
+            # if (producto and producto.estado):
+            #     pass
+            # else:
+            #     banderaProductos += 1
+            # FORMA 2
+            if (producto is None or producto.estado == False):
+                return Response({
+                            "ok": False,
+                            "message": "Verifique los productos ingresados"
+                        }, status.HTTP_400_BAD_REQUEST)
         
+        # II VALIDAR LAS CANTIDADES
+        for articulo in respuesta.data['articulos']:
+            producto = ProductoModel.objects.filter(productoId=articulo['id']).first()
+            # GRACIAS al related_name indicado en la llave foranea yo puedo ingresar a su relacion inversa (relacion del padre hacia los hijos) y devolver todos sus registros (rows) de ese padre
+            cantidadSolicitada = articulo['cantidad']
+            print("La cantidad solicitada es:",cantidadSolicitada)
+            productoAlmacenes = producto.productosAlmacenes.all() # LIST
+            # print(productoAlmacenes)
+            # ahora hay que ver si existe la cantidad indicada en los inventarios
+            # DEVOLVER LA CANTIDAD DE ESE PRODUCTO EN DETERMINADO PRODUCTOALMACEN
+            cantidadAlmacen = 0
+            for productoAlmacen in productoAlmacenes:
+                # print(productoAlmacen.productoAlmacenCantidad)
+                cantidadAlmacen += productoAlmacen.productoAlmacenCantidad
+            print("La cantidad en stock es", cantidadAlmacen)
+            if cantidadSolicitada > cantidadAlmacen:
+                return Response({
+                    "ok": False,
+                    "message": "La cantidad solicitada del articulo "+ str(articulo['id'])+" es mayor que la que hay en el inventario"
+                })
+        # III REALIZAR EL GUARDADO DE LA CABECERA VENTA USANDO EL SERIALIZER
+
+        # IV REALIZAR EL GUARDADO DE CADA ARTICULO
+
+        # V ACTUALIZAR SUS CANTIDADES DE LA TABLA PRODUCTOALMACEN
+
+        # print(banderaProductos)
+        # si la bandera incremento su valor significa que no se cumplio las condiciones anteriores y por ende termino el proceso
+        # if banderaProductos != 0:
+        #     return Response({
+        #         "ok": False,
+        #         "message": "Verifique los productos ingresados"
+        #     }, status.HTTP_400_BAD_REQUEST)
+
         return Response({
             "ok":True
         })
