@@ -234,7 +234,11 @@ class VentaView(CreateAPIView):
                     "message": "La cantidad solicitada del articulo "+ str(articulo['id'])+" es mayor que la que hay en el inventario"
                 })
         # III REALIZAR EL GUARDADO DE LA CABECERA VENTA USANDO EL SERIALIZER
-
+        cabeceraVenta = CabeceraVentaModel(cabeceraVentaFecha=respuesta.data['fecha'],cabeceraVentaTotal= 0,cabeceraVentaNombre= respuesta.data['nombre'])
+        # Se tiene que hacer el guardado de la cabecera en otra linea despues de crear la instancia porque sino lo capturado sera lo devuelvo por el metodo save() que, en django models no retorna nada
+        cabeceraVenta.save()
+        
+        cabeceraId = cabeceraVenta.cabeceraVentaId
         # IV REALIZAR EL GUARDADO DE CADA ARTICULO
 
         # V ACTUALIZAR SUS CANTIDADES DE LA TABLA PRODUCTOALMACEN
