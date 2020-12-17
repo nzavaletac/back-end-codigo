@@ -1,14 +1,22 @@
 # para evitar ese "error" del modelo debemos instalar la siguiente libreria
 # pip install pylint-django
 from django.shortcuts import render
-from .models import ProductoModel, AlmacenModel, ProductoAlmacenModel, CabeceraVentaModel
+from .models import ProductoModel, AlmacenModel, ProductoAlmacenModel, CabeceraVentaModel, DetalleVentaModel
 # https://www.django-rest-framework.org/api-guide/generic-views/
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ( ListCreateAPIView, 
+                                    RetrieveUpdateDestroyAPIView, 
+                                    ListAPIView, 
+                                    CreateAPIView )
 from rest_framework.response import Response
-from .serializers import ProductoSerializer, AlmacenSerializer, ProductoAlmacenSerializer, AlmacenSerializerMany
+from .serializers import (  ProductoSerializer, 
+                            AlmacenSerializer, 
+                            ProductoAlmacenSerializer, 
+                            AlmacenSerializerMany, 
+                            CabeceraVentaSerializer,
+                            VentaSerializer )
 from rest_framework import status
 # Create your views here.
-
+# las APIViews sirve, para ya darnos una serie de metodos predefinidos que pueden ser modificados pero si nosotros dentro de esa clase agregamos un metodo que no viene predeterminado, se creará sin ningun problema
 class ProductosView(ListCreateAPIView):
     # queryset es la consulta a la base de datos que se va a hacer para efectuar esa vista, utilizando ORM
     # serializer es la forma en la cual yo voy a decorar mi resultado para mostrarlo al cliente y tambien hace las validaciones para guardar en la base de datos
@@ -169,13 +177,24 @@ class ProductosAlmacenesView(ListCreateAPIView):
                 "message":"Hubo un error al registrar el producto almacen"
             },status.HTTP_400_BAD_REQUEST)        
 
-class CabeceraVentasView(ListCreateAPIView):
-    queryset = CabeceraVentaModel.objects.all()
-    # serializer_class = ....
+class CabeceraVentasView(ListAPIView):
+    queryset = CabeceraVentaModel.objects.all() # SELECT * FROM T_CABECERAVENTA
+    serializer_class = CabeceraVentaSerializer
     def get(self, request):
-        # DEVOLVER TODAS LAS CABECERASVENTAS DE MI TABLA
+        resultado = self.get_serializer(instance = self.get_queryset(), many=True)
+        return Response({
+            "ok":True,
+            "content": resultado.data,
+            "message": None
+        })
+
+class VentaView(CreateAPIView):
+    queryset = DetalleVentaModel.objects.all()
+    serializer_class = VentaSerializer
+    def post(self, request):
+        respuesta = self.get_serializer(data=request.data)
+        print(respuesta.is_valid(raise_exception=True))
+        print(respuesta.data)
         return Response({
             "ok":True
         })
-    def post(self, request):
-        pass

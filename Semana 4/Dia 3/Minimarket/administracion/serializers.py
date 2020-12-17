@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ProductoModel, AlmacenModel, ProductoAlmacenModel
+from .models import ProductoModel, AlmacenModel, ProductoAlmacenModel, CabeceraVentaModel
 
 class ProductoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -71,3 +71,21 @@ class AlmacenSerializerMany(serializers.ModelSerializer):
     class Meta:
         model = AlmacenModel
         fields = '__all__'
+
+class CabeceraVentaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CabeceraVentaModel
+        fields = '__all__'
+
+# https://www.django-rest-framework.org/api-guide/fields/
+class ItemDiccionario(serializers.Serializer):
+    # un Serializer si se hereda es automaticamente un diccionario
+    id = serializers.IntegerField()
+    cantidad = serializers.IntegerField()
+
+# no solamente se usa serializadores para modelos, tambien se pueden usar para validar campos independientes de algun modelo
+# solamente cuando nosotros queremos usar una lista sin importar que contenga usamos el serializer.ListField, si muy por el contrario queremos usar otro serializador (herencia) tenemos que simplemente llamarlo y con poner como parametro "many=True" ya se convertirá en una Lista y recordar que todo serializador es al final un diccionario
+class VentaSerializer(serializers.Serializer):
+    articulos = ItemDiccionario(many=True)
+    fecha = serializers.DateTimeField()
+    nombre = serializers.CharField(max_length=45)
