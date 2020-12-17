@@ -233,6 +233,7 @@ class VentaView(CreateAPIView):
                     "ok": False,
                     "message": "La cantidad solicitada del articulo "+ str(articulo['id'])+" es mayor que la que hay en el inventario"
                 })
+        
         # III REALIZAR EL GUARDADO DE LA CABECERA VENTA USANDO EL SERIALIZER
         cabeceraVenta = CabeceraVentaModel(cabeceraVentaFecha=respuesta.data['fecha'],cabeceraVentaTotal= 0,cabeceraVentaNombre= respuesta.data['nombre'])
         # Se tiene que hacer el guardado de la cabecera en otra linea despues de crear la instancia porque sino lo capturado sera lo devuelvo por el metodo save() que, en django models no retorna nada
@@ -244,16 +245,35 @@ class VentaView(CreateAPIView):
             producto = ProductoModel.objects.filter(productoId=articulo['id']).first()
             precioTotal = producto.productoPrecio * articulo['cantidad']
             precioFinal += precioTotal
+
             # Para crear con una FK es necesario pasar todo el objecto (instancia) de mi modelo y no solamente su numero de primary key
             detalle = DetalleVentaModel(productoId=producto, cabeceraVentaId=cabeceraVenta, detalleVentaCantidad=articulo['cantidad'], detalleVentaSubTotal=precioTotal)
             detalle.save()
             detalles.append(detalle)
-        print(detalles)
+
+            
+            # VI ACTUALIZAR SUS CANTIDADES DE LA TABLA PRODUCTOALMACEN
+            # print(producto.productosAlmacenes.all())
+            # PRIMERO agarro la cantidad de cuantos articulos necesito para luego restar cada vez que ingrese a un productoAlmacen
+            cantidadesNecesitadas = articulo['cantidad']
+            for productoAlmacen in producto.productosAlmacenes.all():
+                cantidadAlmacen = productoAlmacen.productoAlmacenCantidad
+                if cantidadesNecesitadas > 0:
+                    if cantidadAlmacen >= cantidadesNecesitadas:
+                        productoAlmacen.productoAlmacenCantidad = productoAlmacen.productoAlmacenCantidad - cantidadesNecesitadas
+                        productoAlmacen.save()
+                        cantidadesNecesitadas = 0
+                        print("Se proveyo la cantidad solicitada")
+                    else:
+                        cantidadesNecesitadas = cantidadesNecesitadas - cantidadAlmacen
+                        productoAlmacen.productoAlmacenCantidad = 0
+                        productoAlmacen.save()
+                        print("Falta mas stock")
+        # print(detalles)
         # V MODIFICAR EL PRECIO FINAL DE MI CABECERA
         cabeceraVenta.cabeceraVentaTotal = precioFinal
         cabeceraVenta.save()
-        # VI ACTUALIZAR SUS CANTIDADES DE LA TABLA PRODUCTOALMACEN
-
+        
         # print(banderaProductos)
         # si la bandera incremento su valor significa que no se cumplio las condiciones anteriores y por ende termino el proceso
         # if banderaProductos != 0:
