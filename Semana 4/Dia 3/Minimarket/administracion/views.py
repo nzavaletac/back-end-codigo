@@ -195,6 +195,7 @@ class VentaView(CreateAPIView):
         respuesta = self.get_serializer(data=request.data)
         print(respuesta.is_valid(raise_exception=True))
         print(respuesta.data)
+        
         return Response({
             "ok":True
         })

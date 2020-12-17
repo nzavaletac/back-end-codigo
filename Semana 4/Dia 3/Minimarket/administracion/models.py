@@ -64,6 +64,7 @@ class DetalleVentaModel(models.Model):
     detalleVentaCantidad = models.IntegerField(db_column='detven_cant')
     detalleVentaSubTotal = models.DecimalField(max_digits=5, decimal_places=2, db_column='detven_subtotal')
     cabeceraVentaId = models.ForeignKey(CabeceraVentaModel, on_delete=models.PROTECT, db_column='cabven_id', related_name='cabeceraVentas')
-    productoAlmacenId = models.ForeignKey(ProductoAlmacenModel, on_delete=models.PROTECT, db_column='prod_alma_id', related_name='productoAlmacenVentas')
+    # productoAlmacenId = models.ForeignKey(ProductoAlmacenModel, on_delete=models.PROTECT, db_column='prod_alma_id', related_name='productoAlmacenVentas')
+    productoId = models.ForeignKey(ProductoModel, on_delete=models.PROTECT, db_column="prod_id", related_name='productoVentas')
     class Meta:
         db_table='t_detventa'
