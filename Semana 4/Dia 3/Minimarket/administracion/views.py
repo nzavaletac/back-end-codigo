@@ -237,11 +237,22 @@ class VentaView(CreateAPIView):
         cabeceraVenta = CabeceraVentaModel(cabeceraVentaFecha=respuesta.data['fecha'],cabeceraVentaTotal= 0,cabeceraVentaNombre= respuesta.data['nombre'])
         # Se tiene que hacer el guardado de la cabecera en otra linea despues de crear la instancia porque sino lo capturado sera lo devuelvo por el metodo save() que, en django models no retorna nada
         cabeceraVenta.save()
-        
-        cabeceraId = cabeceraVenta.cabeceraVentaId
+        detalles = []
+        precioFinal = 0
         # IV REALIZAR EL GUARDADO DE CADA ARTICULO
-
-        # V ACTUALIZAR SUS CANTIDADES DE LA TABLA PRODUCTOALMACEN
+        for articulo in respuesta.data['articulos']:
+            producto = ProductoModel.objects.filter(productoId=articulo['id']).first()
+            precioTotal = producto.productoPrecio * articulo['cantidad']
+            precioFinal += precioTotal
+            # Para crear con una FK es necesario pasar todo el objecto (instancia) de mi modelo y no solamente su numero de primary key
+            detalle = DetalleVentaModel(productoId=producto, cabeceraVentaId=cabeceraVenta, detalleVentaCantidad=articulo['cantidad'], detalleVentaSubTotal=precioTotal)
+            detalle.save()
+            detalles.append(detalle)
+        print(detalles)
+        # V MODIFICAR EL PRECIO FINAL DE MI CABECERA
+        cabeceraVenta.cabeceraVentaTotal = precioFinal
+        cabeceraVenta.save()
+        # VI ACTUALIZAR SUS CANTIDADES DE LA TABLA PRODUCTOALMACEN
 
         # print(banderaProductos)
         # si la bandera incremento su valor significa que no se cumplio las condiciones anteriores y por ende termino el proceso
