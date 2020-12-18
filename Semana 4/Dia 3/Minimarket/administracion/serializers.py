@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ProductoModel, AlmacenModel, ProductoAlmacenModel, CabeceraVentaModel
+from .models import ProductoModel, AlmacenModel, ProductoAlmacenModel, CabeceraVentaModel, DetalleVentaModel
 
 class ProductoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -89,3 +89,16 @@ class VentaSerializer(serializers.Serializer):
     articulos = ItemDiccionario(many=True)
     fecha = serializers.DateTimeField()
     nombre = serializers.CharField(max_length=45)
+
+
+class VentaDetalleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DetalleVentaModel
+        fields = '__all__'
+
+class VentaCompletaSerializer(serializers.ModelSerializer):
+    # siempre que yo quiera usar una relacion en un serializer debo de indicar que many=True puesto que al tener el padre uno o muchos hijos va a devolver una lista de todos los hijos y para que lo itere el serializador
+    cuerpo = VentaDetalleSerializer(source='cabeceraVentas', many=True, read_only=True)
+    class Meta:
+        model = CabeceraVentaModel
+        fields= '__all__'

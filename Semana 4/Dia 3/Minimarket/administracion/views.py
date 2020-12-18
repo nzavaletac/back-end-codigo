@@ -13,7 +13,8 @@ from .serializers import (  ProductoSerializer,
                             ProductoAlmacenSerializer, 
                             AlmacenSerializerMany, 
                             CabeceraVentaSerializer,
-                            VentaSerializer )
+                            VentaSerializer,
+                            VentaCompletaSerializer )
 from rest_framework import status
 # Create your views here.
 # las APIViews sirve, para ya darnos una serie de metodos predefinidos que pueden ser modificados pero si nosotros dentro de esa clase agregamos un metodo que no viene predeterminado, se creará sin ningun problema
@@ -278,6 +279,8 @@ class VentaView(CreateAPIView):
         cabeceraVenta.cabeceraVentaTotal = precioFinal
         cabeceraVenta.save()
         
+        # Llamo a mi serializador para devolver la data correctamente formateada
+        ventaCompleta = VentaCompletaSerializer(instance=cabeceraVenta)
         # print(banderaProductos)
         # si la bandera incremento su valor significa que no se cumplio las condiciones anteriores y por ende termino el proceso
         # if banderaProductos != 0:
@@ -287,5 +290,6 @@ class VentaView(CreateAPIView):
         #     }, status.HTTP_400_BAD_REQUEST)
 
         return Response({
-            "ok":True
-        })
+            "ok":True,
+            "content": ventaCompleta.data
+        }, status.HTTP_201_CREATED)
