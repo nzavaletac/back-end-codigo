@@ -4,7 +4,8 @@ from .views import (ProductosView,
                     AlmacenesView, 
                     ProductosAlmacenesView, 
                     CabeceraVentasView,
-                    VentaView)
+                    VentaView,
+                    retornar_usuario_por_nombre)
 
 urlpatterns = [
     path('productos', ProductosView.as_view(), name="Productos"),
@@ -13,4 +14,5 @@ urlpatterns = [
     path('productosalmacenes', ProductosAlmacenesView.as_view()),
     path('cabeceraventas', CabeceraVentasView.as_view()),
     path('venta', VentaView.as_view()),
+    path('search/user/<str:nombre>',retornar_usuario_por_nombre),
 ]

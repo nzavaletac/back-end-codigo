@@ -16,7 +16,28 @@ from .serializers import (  ProductoSerializer,
                             VentaSerializer,
                             VentaCompletaSerializer )
 from rest_framework import status
+from rest_framework.decorators import api_view
 # Create your views here.
+# Si solamente yo quiero usar una funcionalidad basica y no usar mucha logica ni muchos metodos (POST,GET...) puedo entonces utilizar un decorador llamado api_view
+# como unico parametro del api_view indico los metodos de acceso, pero si no pongo nada el unico metodo de acceso va a ser por defecto el GET
+@api_view()
+def retornar_usuario_por_nombre(request, nombre):
+    # para mandar espacios y caracteres especiales como ; , / ? .... en el frontEnd debemos antes de pasar el valor usar el metodo "encodeURI(palabra) para JS|TS"
+    print(nombre)
+    # Hacer una busqueda de mi tabla CabeceraVenta para que, pasandole el nombre del cliente, me devuelva todas sus cabeceras y usar el VentaCompletaSerializer.
+    # solamente usando COINCIDENCIA EXACTA
+    # Filtros especiales
+    # https://docs.djangoproject.com/en/3.1/ref/models/querysets/
+    compras = CabeceraVentaModel.objects.filter(cabeceraVentaNombre=nombre).all()
+    comprasSerilizada = VentaCompletaSerializer(instance=compras, many=True)
+    return Response({
+        "ok" : True,
+        "content": comprasSerilizada.data,
+        "message": None
+    })
+
+
+
 # las APIViews sirve, para ya darnos una serie de metodos predefinidos que pueden ser modificados pero si nosotros dentro de esa clase agregamos un metodo que no viene predeterminado, se creará sin ningun problema
 class ProductosView(ListCreateAPIView):
     # queryset es la consulta a la base de datos que se va a hacer para efectuar esa vista, utilizando ORM
@@ -278,7 +299,7 @@ class VentaView(CreateAPIView):
         # V MODIFICAR EL PRECIO FINAL DE MI CABECERA
         cabeceraVenta.cabeceraVentaTotal = precioFinal
         cabeceraVenta.save()
-        
+
         # Llamo a mi serializador para devolver la data correctamente formateada
         ventaCompleta = VentaCompletaSerializer(instance=cabeceraVenta)
         # print(banderaProductos)
@@ -293,3 +314,4 @@ class VentaView(CreateAPIView):
             "ok":True,
             "content": ventaCompleta.data
         }, status.HTTP_201_CREATED)
+
