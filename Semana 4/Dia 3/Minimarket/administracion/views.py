@@ -26,15 +26,29 @@ def retornar_usuario_por_nombre(request, nombre):
     print(nombre)
     # Hacer una busqueda de mi tabla CabeceraVenta para que, pasandole el nombre del cliente, me devuelva todas sus cabeceras y usar el VentaCompletaSerializer.
     # solamente usando COINCIDENCIA EXACTA
-    # Filtros especiales
-    # https://docs.djangoproject.com/en/3.1/ref/models/querysets/
-    compras = CabeceraVentaModel.objects.filter(cabeceraVentaNombre=nombre).all()
+    # Field Lookup 
+    # son configuraciones adicionales a mis campos de mis modelos que puedo usar para hacer un filtro mas especifico como clausulas like, limites de fechas, entre otros
+    # https://docs.djangoproject.com/en/3.1/ref/models/querysets/#field-lookups
+    compras = CabeceraVentaModel.objects.filter(cabeceraVentaNombre__contains=nombre).all()
     comprasSerilizada = VentaCompletaSerializer(instance=compras, many=True)
     return Response({
         "ok" : True,
         "content": comprasSerilizada.data,
         "message": None
     })
+
+# https://docs.djangoproject.com/en/3.1/ref/models/querysets/#range
+# http://127.0.0.1:8000/minimarket/search/date/2020-12-17%2000:00:00/2020-12-17%2023:59:59
+@api_view(['GET'])
+def filtrar_compras_fecha(request, fechainicio, fechafin):
+    comprasPorFechas = CabeceraVentaModel.objects.filter(cabeceraVentaFecha__range=(fechainicio, fechafin)).all()
+    comprasPorFechasSerializada = VentaCompletaSerializer(instance=comprasPorFechas, many=True)
+    return Response({
+        "ok":True,
+        "content":comprasPorFechasSerializada.data,
+        "message":None
+    })
+
 
 
 
