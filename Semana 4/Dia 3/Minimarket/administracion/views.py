@@ -257,18 +257,22 @@ class VentaView(CreateAPIView):
             # PRIMERO agarro la cantidad de cuantos articulos necesito para luego restar cada vez que ingrese a un productoAlmacen
             cantidadesNecesitadas = articulo['cantidad']
             for productoAlmacen in producto.productosAlmacenes.all():
+                # Itero todos mis productosAlmacenes segun su relacion inversa del producto y luego capturo su cantidad en ese almacen determinado
                 cantidadAlmacen = productoAlmacen.productoAlmacenCantidad
+                # En cada iteracion voy restando las cantidades necesitadas hasta llegar a 0, si llego ya no necesito restar mas de mis almacenes
                 if cantidadesNecesitadas > 0:
+                    # si la cantidad del almacen es mayor que la solicitada (es decir satisface de mas lo que el usuario necesita) le resto esa cantidad y coloco las cantidadesNecesitadas a 0 puesto que ya tengo todas las cantidades necesitadas y le resto a esa cantidad del Almacen toda la cantidadNecesitada y lo guardo
                     if cantidadAlmacen >= cantidadesNecesitadas:
+                        # Se proveyo la cantidad solicitada
                         productoAlmacen.productoAlmacenCantidad = productoAlmacen.productoAlmacenCantidad - cantidadesNecesitadas
                         productoAlmacen.save()
                         cantidadesNecesitadas = 0
-                        print("Se proveyo la cantidad solicitada")
+                    # Sino consumiré todas las cantidades de ese almacen pero aun me falta stock para satisface por lo que recorreré al siguiente Almacen en busca de mas productos
                     else:
+                        # Falta mas stock
                         cantidadesNecesitadas = cantidadesNecesitadas - cantidadAlmacen
                         productoAlmacen.productoAlmacenCantidad = 0
                         productoAlmacen.save()
-                        print("Falta mas stock")
         # print(detalles)
         # V MODIFICAR EL PRECIO FINAL DE MI CABECERA
         cabeceraVenta.cabeceraVentaTotal = precioFinal
