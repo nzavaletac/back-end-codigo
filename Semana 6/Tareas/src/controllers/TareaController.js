@@ -50,12 +50,28 @@ const editarTareaPorId = (req, res) => {
 
 // eliminar una tarea segun su id
 const eliminarTareaPorId = (req, res)=>{
-    
+    let {id_tarea} = req.params;
+    if (tareas.length >= id_tarea){
+        // https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/Array/splice
+        tareas.splice(id_tarea-1 , 1);
+        return res.json({
+            ok :true,
+            message:'Se elimino la tarea exitosamente',
+            content: null
+        });
+    }else{
+        return res.status(404).json({
+            ok: false,
+            message: 'No existe la tarea',
+            content: null
+        })
+    }
 }
 
 module.exports = {
     // gracias a ES6 se interpreta como creaTarea: crearTarea, es decir la llave del json es igual al nombre de la variable a exportar
     crearTarea,
     listarTareas,
-    editarTareaPorId
+    editarTareaPorId,
+    eliminarTareaPorId
 }
