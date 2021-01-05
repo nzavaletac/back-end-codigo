@@ -17,6 +17,7 @@ const crearTarea = (req, res) => {
         message: 'Se agregó la tarea exitosamente'
     })
 };
+
 const listarTareas = (req, res) => {
     return res.json({
         ok: true,
@@ -68,10 +69,20 @@ const eliminarTareaPorId = (req, res)=>{
     }
 }
 
+const devolverTareaPorId = (req, res)=>{
+    console.log(req.query);
+    // validar si en los parametros esta el parametro id y si está buscarlo en el array y si no está el id indicar que falta ese parametro con un estado 500 y si no existe esa posicion indicar que no existe con un stado 404
+    
+    return res.json({
+        ok:true
+    })
+}
+
 module.exports = {
     // gracias a ES6 se interpreta como creaTarea: crearTarea, es decir la llave del json es igual al nombre de la variable a exportar
     crearTarea,
     listarTareas,
     editarTareaPorId,
-    eliminarTareaPorId
+    eliminarTareaPorId,
+    devolverTareaPorId
 }
