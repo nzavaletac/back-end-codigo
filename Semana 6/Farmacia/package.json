@@ -1,0 +1,22 @@
+{
+  "name": "farmacia-sequelize",
+  "version": "1.0.0",
+  "description": "Api usando base de datos y orm sequelize",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon ./src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "sequelize",
+    "express",
+    "orm"
+  ],
+  "author": "eduardo de rivero",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "sequelize": "^6.3.5"
+  }
+}
