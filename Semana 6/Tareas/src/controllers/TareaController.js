@@ -70,12 +70,30 @@ const eliminarTareaPorId = (req, res)=>{
 }
 
 const devolverTareaPorId = (req, res)=>{
-    console.log(req.query);
     // validar si en los parametros esta el parametro id y si está buscarlo en el array y si no está el id indicar que falta ese parametro con un estado 500 y si no existe esa posicion indicar que no existe con un stado 404
-    
-    return res.json({
-        ok:true
-    })
+    let {id} = req.query;
+    if (id){
+        // si el id es mayor que la longitud de mi arreglo Ó si el id es un valor negativo o igual a cero entonces es una posición invalida
+        if(id > tareas.length || id <= 0){
+            return res.status(404).json({
+                ok: false,
+                content: null,
+                message: 'Posicion no encontrada'
+            });
+        }else{
+            return res.json({
+                ok: true,
+                content: tareas[id-1],
+                message: null
+            });
+        }
+    }else {
+        return res.status(500).json({
+            ok: false,
+            content: null,
+            message: 'Falta el parametro id'
+        })
+    }
 }
 
 module.exports = {
