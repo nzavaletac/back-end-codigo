@@ -1,6 +1,8 @@
 const { Sequelize } = require('sequelize');
 const productoModel = require('../models/ProductoModel');
 const tipoOperacionModel = require('../models/TipoOperacionModel');
+const loteModel = require('../models/LoteModel');
+
 // 1ra forma es usando una URI
 // https://sequelize.readthedocs.io/en/1.7.0/docs/usage/
 // const conexion = new Sequelize('mysql://usuario:password@host:puerto/base_datos')
@@ -24,6 +26,15 @@ const conexion = new Sequelize(
 // Acá se crean las tablas en la base de datos
 const Producto = productoModel(conexion);
 const TipoOperacion = tipoOperacionModel(conexion);
+const Lote = loteModel(conexion);
+
+
+// Una vez definidos todos los modelos, se procede a crear las relaciones
+// Producto tiene muchos Lotes
+Producto.hasMany(Lote, {foreignKey: 'prod_id'});
+// para usar las relaciones inversas ahora hacemos lo contrario
+// Lote pertenece a Producto
+Lote.belongsTo(Producto, {foreignKey: 'prod_id'});
 module.exports = {
     conexion
 }
