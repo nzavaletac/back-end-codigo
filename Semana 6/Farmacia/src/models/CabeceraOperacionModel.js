@@ -11,7 +11,7 @@ module.exports = cabecera_operacion_model = conexion => conexion.define('cabecer
         type:DataTypes.DATE,
         field:'cab_ope_fecg'
     }, 
-     // minimo 5 palabras y maximo 40 y que solo sea letras
+     // minimo 5 palabras y que solo sea letras
     cabeceraOperacionNombre: {
         type:DataTypes.STRING(45),
         field:'cab_ope_nomb'
