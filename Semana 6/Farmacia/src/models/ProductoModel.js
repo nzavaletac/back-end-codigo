@@ -16,11 +16,20 @@ const producto_model = (conexion)=>{
             // si no pongo la longitud en los STRING va a ser de longitud 1, va a crear un VARCHAR(1)
             type: DataTypes.STRING(45),
             field: 'prod_nomb',
-            unique: true
+            unique: true,
+            // https://sequelize.org/master/manual/validations-and-constraints.html#per-attribute-validations
+            validate : {
+                len: [1, 20],
+                isAlphanumeric: true
+            }
         },
         productoPrecio: {
             type: DataTypes.DECIMAL(5,2),
-            field: 'prod_precio'
+            field: 'prod_precio',
+            validate: {
+                min: 1,
+                max: 1000
+            }
         },
         productoRegistroSanitario:{
             type: DataTypes.STRING(25),
