@@ -9,7 +9,7 @@ module.exports = cabecera_operacion_model = conexion => conexion.define('cabecer
     // que su valor por defecto sea el dia de hoy
     cabeceraOperacionFecha: {
         type:DataTypes.DATE,
-        field:'cab_ope_fecg'
+        field:'cab_ope_fech'
     }, 
      // minimo 5 palabras y que solo sea letras
     cabeceraOperacionNombre: {
