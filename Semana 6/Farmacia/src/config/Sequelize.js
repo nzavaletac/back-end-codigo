@@ -2,6 +2,7 @@ const { Sequelize } = require('sequelize');
 const productoModel = require('../models/ProductoModel');
 const tipoOperacionModel = require('../models/TipoOperacionModel');
 const loteModel = require('../models/LoteModel');
+const cabeceraOperacionModel = require('../models/CabeceraOperacionModel');
 
 // 1ra forma es usando una URI
 // https://sequelize.readthedocs.io/en/1.7.0/docs/usage/
@@ -27,7 +28,7 @@ const conexion = new Sequelize(
 const Producto = productoModel(conexion);
 const TipoOperacion = tipoOperacionModel(conexion);
 const Lote = loteModel(conexion);
-
+cabeceraOperacionModel(conexion);
 
 // Una vez definidos todos los modelos, se procede a crear las relaciones
 // Producto tiene muchos Lotes
