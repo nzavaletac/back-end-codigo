@@ -28,7 +28,7 @@ const conexion = new Sequelize(
 const Producto = productoModel(conexion);
 const TipoOperacion = tipoOperacionModel(conexion);
 const Lote = loteModel(conexion);
-cabeceraOperacionModel(conexion);
+const CaberaOperacion = cabeceraOperacionModel(conexion);
 
 // Una vez definidos todos los modelos, se procede a crear las relaciones
 // Producto tiene muchos Lotes
