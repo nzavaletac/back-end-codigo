@@ -1,5 +1,5 @@
 const {DataTypes} = require('sequelize');
-module.exports = tipo_operacion_model = (conexion)=>{
+const tipo_operacion_model = (conexion)=>{
     let tipo_operacion = conexion.define('tipo_operaciones',{
         tipoOperacionId : {
             type: DataTypes.INTEGER,
@@ -29,4 +29,5 @@ module.exports = tipo_operacion_model = (conexion)=>{
         // si no quiero ninguno de los dos timestamps:false (es su valor por defecto)
     });
     return tipo_operacion;
-}
+};
+module.exports = tipo_operacion_model;

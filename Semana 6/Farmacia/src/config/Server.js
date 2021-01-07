@@ -39,7 +39,7 @@ module.exports = class Server {
             // force: true => va a resetear toda la base de datos, va a borrar todas las tablas y las va a volver a crear de 0, tendremos perdida de datos y empezara limpia desde 0
             // alter: true => verifica que los modelos esten igual que las tablas, si hay algun cambio solamente hara ese cambio mas no reseteará todas las tablas y mucho menos habrá perdida de información
             // sus valores por defecto en ambos casos, son false
-            conexion.sync({force: false, alter:true}).then(()=>{
+            conexion.sync({force: true, alter:false}).then(()=>{
                 console.log('Base de datos sincronizada correctamente');
             })
         });
