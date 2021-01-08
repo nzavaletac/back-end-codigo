@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const {conexion} = require('./Sequelize');
+const producto_router = require('../routes/ProductoRouter');
 module.exports = class Server {
     constructor(){
         this.app = express();
@@ -32,14 +33,17 @@ module.exports = class Server {
                 message:'Bienvenido a mi API'
             });
         });
+        this.app.use('',producto_router);
     }
     start(){
         this.app.listen(this.puerto, ()=>{
             console.log('Servidor corriendo exitosamente');
+            // https://sequelize.org/master/manual/model-basics.html#model-synchronization
             // force: true => va a resetear toda la base de datos, va a borrar todas las tablas y las va a volver a crear de 0, tendremos perdida de datos y empezara limpia desde 0
             // alter: true => verifica que los modelos esten igual que las tablas, si hay algun cambio solamente hara ese cambio mas no reseteará todas las tablas y mucho menos habrá perdida de información
             // sus valores por defecto en ambos casos, son false
-            conexion.sync({force: true, alter:false}).then(()=>{
+            // si dejamos el sync sin ningun parametro => crea las tablas si no existen y no hace nada si ya existen
+            conexion.sync().then(()=>{
                 console.log('Base de datos sincronizada correctamente');
             })
         });
