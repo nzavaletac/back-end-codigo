@@ -9,3 +9,7 @@ producto_router.get('/producto',ProductoController.listarProductos);
 producto_router.get('/producto/:id', ProductoController.listarProductoById);
 
 producto_router.put('/producto/:id', ProductoController.editarProductoById);
+
+producto_router.delete('/producto/:id', ProductoController.eliminarProductoById);
+
+producto_router.get('/producto/buscar/:nombre', ProductoController.listarProductoLikeName);
