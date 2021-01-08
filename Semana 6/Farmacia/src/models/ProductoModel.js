@@ -19,8 +19,7 @@ const producto_model = (conexion)=>{
             unique: true,
             // https://sequelize.org/master/manual/validations-and-constraints.html#per-attribute-validations
             validate : {
-                len: [1, 20],
-                isAlphanumeric: true
+                len: [1, 20]
             }
         },
         productoPrecio: {
@@ -33,7 +32,10 @@ const producto_model = (conexion)=>{
         },
         productoRegistroSanitario:{
             type: DataTypes.STRING(25),
-            field: 'prod_regsan'
+            field: 'prod_regsan',
+            validate: {
+                isAlphanumeric: true
+            }
         }
     },{
         tableName: 't_producto',

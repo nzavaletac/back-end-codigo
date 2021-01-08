@@ -16,11 +16,73 @@ const crearProducto = async (req, res) => {
     } catch (error) {
         console.error(error);
         return res.json({
-            ok:false,
+            ok: false,
             content: error
         })
     }
 };
+
+const listarProductos = (req, res) => {
+    // SELECT * FROM T_PRODUCTO
+    // Producto.findAll()
+
+    // si yo quiero editar el nombre con el cual esta en la bd dentro de cada atributo le pongo un array PERO el nombre que ahora voy a reemplazar tiene que ser el nombre que esta en la BASE DE DATOS
+    // SELECT PROD_NOM AS NOMBRE, PROD_PREC FROM T_PRODUCTO
+    // Producto.findAll({
+    //     attributes: [['prod_nomb','Nombre'], 'productoPrecio']
+    // })
+    // SELECT PROD_ID PROD_NOM, PROD_PREC, PROD_REGSAN FROM T_PRODUCTO
+    Producto.findAll({
+        attributes: {
+            exclude: ['createdAt', 'updatedAt'],
+        }
+    })
+        .then((productos) => {
+            return res.json({
+                ok: true,
+                content: productos,
+                message: null
+            })
+        }).catch((error) => {
+            return res.status(500).json({
+                ok: false,
+                content: error,
+                message: 'Hubo un error al devolver los productos'
+            })
+        });
+}
+
+const listarProductoById = (req, res) => {
+    // 127.0.0.1:5000/producto/1
+    let { id } = req.params;
+    Producto.findOne({
+        where: {
+            productoId: id
+        }
+    }).then((producto) => {
+        // si no hay produto indicar que no hay producto en el message => usar operador ternario y mandar un status 404
+        return producto ? 
+        res.json({
+            ok: true,
+            content: producto,
+            message: null
+        }) : 
+        res.status(404).json({
+            ok:true,
+            content:producto,
+            message:'No hay producto'
+        })
+    }).catch((error) => {
+        return res.status(500).json({
+            ok: false,
+            content: error,
+            message: 'Hubo un error al buscar el producto'
+        })
+    })
+}
+// listarProductoLikeName
 module.exports = {
-    crearProducto
+    crearProducto,
+    listarProductos,
+    listarProductoById
 }
