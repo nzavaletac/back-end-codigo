@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta API</title>
+</head>
+<body>
+    <script>
+        async function traerProductos() {
+            let resultado = await fetch('http://127.0.0.1:5000/producto', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            // await resultado.status()
+            return await resultado.json();
+        }
+        let res = traerProductos().then(resultado=>console.log(resultado))
+    </script>
+</body>
+
+</html>
