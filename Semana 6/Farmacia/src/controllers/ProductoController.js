@@ -80,9 +80,31 @@ const listarProductoById = (req, res) => {
         })
     })
 }
+const editarProductoById = (req, res)=>{
+    let {id} = req.params;
+    Producto.update(req.body,{
+        where:{
+            productoId: id
+        }
+    }).then(resultado=>{
+        // validar primero si hubo alguna actualizacion
+        // si hubo actualizacion indicar en el message que se actualizo y ademas en su content, retornar ese registro actualizado, con un status 201
+        // si no hubo actualizacion retornar el content null y en el message que no se actualizo
+        return res.json({
+            ok:true,
+            content: resultado,
+            message: null
+        });
+    }).catch(error=>res.status(500).json({
+        ok:false,
+        content:error,
+        message:'Hubo un error al actualizar el producto'
+    }))
+}
 // listarProductoLikeName
 module.exports = {
     crearProducto,
     listarProductos,
-    listarProductoById
+    listarProductoById,
+    editarProductoById
 }
