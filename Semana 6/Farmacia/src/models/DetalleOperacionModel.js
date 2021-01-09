@@ -14,7 +14,7 @@ module.exports = detalle_operacion_model = conexion => conexion.define('detalle_
         allowNull: false
     },
     detalleOperacionSubTotal: {
-        type: DataTypes.DECIMAL(5,2),
+        type: DataTypes.DECIMAL(6,2), // 9999.99
         field:'det_ope_subtotal',
         allowNull: false
     }
