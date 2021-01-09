@@ -11,8 +11,10 @@ const detalleOperacionModel = require('../models/DetalleOperacionModel');
 // 2da forma de conectarse a la bd
 const conexion = new Sequelize(
     // base_datos, usuario, password
-    "farmaciaSequelize", "root", "root", {
-    host: "localhost",
+    "ueaxl2etpy9d7rf2", "hdux3zw8kl3bw40j", "fiiouv23ye9tx7il", {
+    // "farmaciaSequelize", "root", "root", {
+    host:"j21q532mu148i8ms.cbetxkdyhwsb.us-east-1.rds.amazonaws.com",
+    //host: "localhost",
     dialect: "mysql",
     timezone: "-05:00",// sirve para que los campos de auditoria se creen con la hora local
     logging: false, // sirve para que no muestre en la terminal todas las consultas SQL que se ejecutan internamente
@@ -34,10 +36,10 @@ const DetalleOperacion = detalleOperacionModel(conexion);
 // Producto tiene muchos Lotes
 // https://sequelize.org/master/manual/assocs.html
 // si deseamos que una llave foranea no acepte valores nulos, aparte de su nombre se puede indicar su propiedad que allowNull:false
-Producto.hasMany(Lote,{ foreignKey:{name:'prod_id', allowNull: false}});
+Producto.hasMany(Lote, { foreignKey: { name: 'prod_id', allowNull: false } });
 // para usar las relaciones inversas ahora hacemos lo contrario
 // Lote pertenece a Producto
-Lote.belongsTo(Producto,{ foreignKey:'prod_id'});
+Lote.belongsTo(Producto, { foreignKey: 'prod_id' });
 TipoOperacion.hasMany(CabeceraOperacion, { foreignKey: 'tipo_ope_id' });
 CabeceraOperacion.belongsTo(TipoOperacion, { foreignKey: 'tipo_ope_id' });
 
