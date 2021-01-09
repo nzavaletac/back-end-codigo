@@ -33,7 +33,8 @@ const DetalleOperacion = detalleOperacionModel(conexion);
 // Una vez definidos todos los modelos, se procede a crear las relaciones
 // Producto tiene muchos Lotes
 // https://sequelize.org/master/manual/assocs.html
-Producto.hasMany(Lote,{ foreignKey:'prod_id'});
+// si deseamos que una llave foranea no acepte valores nulos, aparte de su nombre se puede indicar su propiedad que allowNull:false
+Producto.hasMany(Lote,{ foreignKey:{name:'prod_id', allowNull: false}});
 // para usar las relaciones inversas ahora hacemos lo contrario
 // Lote pertenece a Producto
 Lote.belongsTo(Producto,{ foreignKey:'prod_id'});

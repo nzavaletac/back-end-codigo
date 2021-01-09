@@ -166,7 +166,8 @@ const listarProductoLikeName = async (req, res) => {
             message:'Hubo un error al buscar los productos'
         })
     }
-}
+};
+
 module.exports = {
     crearProducto,
     listarProductos,
