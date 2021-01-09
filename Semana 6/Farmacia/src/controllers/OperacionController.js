@@ -97,36 +97,33 @@ const crearOperacion = async (req, res) => {
     }
 
 };
-const listarOperaciones = (req, res) => {
+const listarOperaciones = async(req, res) => {
     // listar todas las Operaciones con sus detalles y sus lotes
-    /*
-    {
-        "fecha":"2021-01-12",
-        "nombre":"eduardo",
-        "direccion":"calel..",
-        "total":150,
-        "igv":15,
-        "ruc":"123123123",
-        "detalle":[
-            {
-                "cantidad":1,
-                "subtotal":15.40,
-                "lote":{
-                    "descripcion":"1234",
-                    "fecha_vencimiento":"2021-12-31"
-                }
+    let resultado = await CabeceraOperacion.findAll({
+        // ['nombre_columna_bd','nuevo_nombre_a_mostrar']
+        attributes: [['cab_ope_fech','fecha'],['cab_ope_nomb','nombre'],['cab_ope_direc','direccion'],['cab_ope_total','total'],['cab_ope_igv','igv'],['cab_ope_ruc','ruc']],
+        /*attributes:{
+            exclude:['cabeceraOperacionId','tipo_ope_id']
+        },*/
+        include:{
+            model: DetalleOperacion,
+            attributes:{
+                exclude:['detalleOperacionId','lote_id','cab_ope_id']
             },
-            {
-                "cantidad":4,
-                "subtotal":25.80,
-                "lote":{
-                    "descripcion":"4578",
-                    "fecha_vencimiento":"2021-10-11"
-                }
+            include:{
+                model: Lote,
+                attributes: ['loteDescripcion','loteFechaVencimiento'], 
+               include: {
+                   model : Producto,
+                   attributes: [['prod_nomb','nombre Producto'],['prod_precio','precio Producto'],['prod_regsan','registro Sanitario']]
+               }
             }
-        ]
-    }
-    */
+        }
+    });
+    res.json({
+        ok:true,
+        content: resultado
+    })
 };
 const filtroOperaciones = (req, res) => {
 
