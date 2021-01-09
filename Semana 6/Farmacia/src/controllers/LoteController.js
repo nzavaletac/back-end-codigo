@@ -1,4 +1,4 @@
-const { Lote } = require('../config/Sequelize');
+const { Lote, Producto, DetalleOperacion } = require('../config/Sequelize');
 const { Op } = require('sequelize');
 const crearLote = async (req, res) => {
     try {
@@ -41,11 +41,21 @@ const buscarLote = async (req, res) => {
                 }
             });
         }else if(anio){
+            // quitar el prod_id del resultado de lotes
             lotes = await Lote.findAll({
                 where : {
                     loteFechaVencimiento: {
                         [Op.startsWith]: anio
                     }
+                },
+                include:{
+                    model: Producto,
+                    attributes: {
+                        exclude: ['createdAt','updatedAt']
+                    }
+                },
+                attributes: {
+                    exclude: ['prod_id']
                 }
             });
         }
