@@ -34,7 +34,7 @@ const crearOperacion = async(req,res)=>{
                 tipoOperacionDescripcion : tipo
             }
         });
-        console.log(tipoObj)
+        console.log(tipoObj);
     } catch (error) {
         
     }
