@@ -21,7 +21,7 @@ module.exports = cabecera_operacion_model = conexion => conexion.define('cabecer
         field: 'cab_ope_nomb',
         validate: {
             len: [5, 45],
-            isAlpha: true
+            // isAlpha: true // no acepta ni numeros ni caracteres no numericos como espacios comas y otros simbolos
         }
     },
     // que solo sea alfanumerico
@@ -29,7 +29,7 @@ module.exports = cabecera_operacion_model = conexion => conexion.define('cabecer
         type: DataTypes.STRING(45),
         field: 'cab_ope_direc',
         validate: {
-            isAlphanumeric: true
+            // isAlphanumeric: true // solo permite caracteres de letras y numeros mas no espacios ....
         }
     },
     // que sea minimo 25 y maximo 1000
