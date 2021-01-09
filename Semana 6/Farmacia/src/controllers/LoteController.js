@@ -22,7 +22,7 @@ const crearLote = async (req, res) => {
 }
 
 const buscarLote = async (req, res) => {
-    let { fecha, fech_in, fech_fin } = req.query;
+    let { fecha, fech_in, fech_fin, anio } = req.query;
     try {
         let lotes;
         if (fecha)// si la fecha no es undefined
@@ -37,6 +37,14 @@ const buscarLote = async (req, res) => {
                 where: {
                     loteFechaVencimiento: {
                         [Op.between]: [fech_in, fech_fin]
+                    }
+                }
+            });
+        }else if(anio){
+            lotes = await Lote.findAll({
+                where : {
+                    loteFechaVencimiento: {
+                        [Op.startsWith]: anio
                     }
                 }
             });
