@@ -13,7 +13,7 @@ const categoria_model = (conexion) => {
         categoriaDescripcion: {
             field: 'categoria_descripcion',
             allowNull: false,
-            type: DataTypes.STRING(25),
+            type: DataTypes.STRING(50),
         },
         categoriaNombre: {
             field: 'categoria_nombre',
