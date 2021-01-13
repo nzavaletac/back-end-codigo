@@ -24,7 +24,6 @@ module.exports = class Server {
     }
     rutas() {
         this.app.get('/', (req, res) => {
-            console.log(req.url)
             res.status(200).send('La api funciona correctamente 😎🍕');
         });
         this.app.use('',categoria_router);
