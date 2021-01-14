@@ -18,9 +18,6 @@ const createCategoria = async (req, res) => {
         });
     }
 }
-// Mientras arreglo mi micro amigos, otra vez MIL DISCULPAS por los inconvenientes, mientras soluciono este error, hagamos el devolverCategorias:
-// crear un controlador para devolver todas las Categorias en la base de datos y si es que no hay una categoria en la base de datos indicar que faltan crear con un status 404
-// implementar la ruta '/categoria' con el metodo correspondiente
 const devolverCategorias = (req, res)=>{
     Categoria.findAll().then((categorias)=>{
         if (categorias.length != 0){
