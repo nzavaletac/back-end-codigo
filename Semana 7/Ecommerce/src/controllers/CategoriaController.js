@@ -42,7 +42,10 @@ const devolverCategorias = (req, res)=>{
     })
     // segundo metodo, va con async obligatoriamente
     // let categorias = await Categoria.findAll()
-
+}
+const in_habilitarCategoria = (req, res)=>{
+    // mandar el id por la url y ver si la categoria tiene su estado=true, inhabilitarlo y si tiene que estado = false, habilitarlo, indicar en el message si fue habilitado o inhabilitado usando operadores ternarios y si no existe la categoria indicar que no existe con un estado 404
+    // use update 
 }
 module.exports = {
     createCategoria,

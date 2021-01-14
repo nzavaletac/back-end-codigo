@@ -20,6 +20,12 @@ const categoria_model = (conexion) => {
             unique: true,
             allowNull: false,
             type: DataTypes.STRING(15)
+        },
+        categoriaEstado: {
+            field: 'categoria_estado',
+            defaultValue: true,
+            type: DataTypes.BOOLEAN,
+            allowNull: true
         }
     }, {
         tableName: 't_categoria',

@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const { conexion } = require("./Sequelize");
 const categoria_router = require("../routes/CategoriaRoutes");
 const almacen_router = require("../routes/AlmacenRoutes");
+const producto_router = require("../routes/ProductoRoutes");
 module.exports = class Server {
   constructor() {
     this.app = express();
@@ -29,6 +30,7 @@ module.exports = class Server {
     });
     this.app.use("", categoria_router);
     this.app.use("", almacen_router);
+    this.app.use("", producto_router);
   }
   start() {
     this.app.listen(this.puerto, () => {
