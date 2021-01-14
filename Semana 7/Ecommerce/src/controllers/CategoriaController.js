@@ -46,8 +46,36 @@ const devolverCategorias = (req, res)=>{
 const in_habilitarCategoria = (req, res)=>{
     // mandar el id por la url y ver si la categoria tiene su estado=true, inhabilitarlo y si tiene que estado = false, habilitarlo, indicar en el message si fue habilitado o inhabilitado usando operadores ternarios y si no existe la categoria indicar que no existe con un estado 404
     // use update 
+    let {id}= req.params;
+    Categoria.findByPk(id).then((categoriaEncontrada)=>{
+        if(categoriaEncontrada){
+            return Categoria.update({categoriaEstado: !categoriaEncontrada.categoriaEstado},{
+                where: {
+                    categoriaId:id
+                }
+            })
+        }else{
+            res.status(404).json({
+                ok:false,
+                message:'Categoria no existe'
+            })
+        }
+    }).then(()=>{
+        return Categoria.findByPk(id);
+    }).then(categoriaActualizada=>{
+        res.status(201).json({
+            ok:true,
+            content: categoriaActualizada.categoriaEstado?'Se habilito exitosamente':'Se inhabilito exitosamente',
+            message:'Categoria actualizada exitosamente'
+        })
+    }).catch(error=>res.status(500).json({
+        ok: false,
+        content: error,
+        message:'Error al actualizar la categoria'
+    }))
 }
 module.exports = {
     createCategoria,
-    devolverCategorias
+    devolverCategorias,
+    in_habilitarCategoria
 }
