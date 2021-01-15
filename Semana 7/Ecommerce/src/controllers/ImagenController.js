@@ -26,6 +26,9 @@ const subirImagen = async (req, res) => {
   } else {
     let llave = Object.keys(req.files)[0];
     console.log(llave);
+    if (llave){
+        
+    }
     return res.status(404).json({
       ok: false,
       message: "Falta la imagen a subir",
