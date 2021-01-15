@@ -43,10 +43,39 @@ const devolverCategorias = (req, res)=>{
     // segundo metodo, va con async obligatoriamente
     // let categorias = await Categoria.findAll()
 }
-const in_habilitarCategoria = (req, res)=>{
+const in_habilitarCategoria = async(req, res)=>{
     // mandar el id por la url y ver si la categoria tiene su estado=true, inhabilitarlo y si tiene que estado = false, habilitarlo, indicar en el message si fue habilitado o inhabilitado usando operadores ternarios y si no existe la categoria indicar que no existe con un estado 404
     // use update 
     let {id}= req.params;
+    try {
+        let categoriaEncontrada = await Categoria.findByPk(id);
+        //console.log(categoriaEncontrada); // si no existe es null
+        if(categoriaEncontrada){
+            await Categoria.update({categoriaEstado: !categoriaEncontrada.categoriaEstado},{
+                where: {
+                    categoriaId:id
+                }
+            });
+            let categoriaActualizada = await Categoria.findByPk(id);
+            res.status(201).json({
+                ok:true,
+                content: categoriaActualizada.categoriaEstado?'Se habilito exitosamente':'Se inhabilito exitosamente',
+                message:'Categoria actualizada exitosamente'
+            })
+        }else{
+            res.status(404).json({
+                ok:false,
+                message:'Categoria no existe'
+            })
+        }
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            content: error,
+            message: 'Hubo un error al actualizar la categoria'
+        })
+    }
+    /*
     Categoria.findByPk(id).then((categoriaEncontrada)=>{
         if(categoriaEncontrada){
             return Categoria.update({categoriaEstado: !categoriaEncontrada.categoriaEstado},{
@@ -73,6 +102,7 @@ const in_habilitarCategoria = (req, res)=>{
         content: error,
         message:'Error al actualizar la categoria'
     }))
+    */
 }
 module.exports = {
     createCategoria,
