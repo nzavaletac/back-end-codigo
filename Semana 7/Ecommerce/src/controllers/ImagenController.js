@@ -6,7 +6,9 @@ const fs = require("fs");
 // path => sirve para devolver archivos del servidor
 // https://nodejs.org/api/path.html
 const path = require("path");
-
+function validarImagen(archivos){
+  //...
+}
 const subirImagen = async (req, res) => {
   try {
     //   console.log(req.files.imagen); // maneja todo el tratamiento de archivos mandados por el front
@@ -75,16 +77,31 @@ const devolverImagenPorId = async (req, res) => {
   }
 };
 
-const actualizarImagen = async(req, res) => {
+const actualizarImagen = async (req, res) => {
   // actualizar la imagen tanto en la bd con en el servidor
   let { id } = req.params;
+  let { imagen }= req.files;
   // primero busco esa imagen segun su PK en la bd
-  let imagen = await Imagen.findByPk(id);
-  if (imagen) {
+  let imagenEncontrada = await Imagen.findByPk(id);
+  if (imagenEncontrada) {
+    let ruta = `src/multimedia/${imagenEncontrada.imagenURL}`;
+    // la siguiente condicional solamente sirve para ver  si existe el archivo en el servidor, sea si existe o no existe, igual tenemos que actualizar el nombre del archivo en la bd
+    if (fs.existsSync(ruta)) {
+      let rpta = fs.unlinkSync(ruta);
+      console.log(rpta);
+    }
+    let nombreArchivo = imagen.path.split("\\")[2];
+    await Imagen.update({imagenURL: nombreArchivo},{
+      where:{
+        imagenId: id
+      }
+    });
+    imagenEncontrada = await Imagen.findByPk(id);
     return res.json({
-      ok:true,
-      content: imagen
-    })
+      ok: true,
+      content: imagenEncontrada,
+      message:'Imagen actualizada con exito'
+    });
   } else {
     return res.status(404).json({
       ok: false,
