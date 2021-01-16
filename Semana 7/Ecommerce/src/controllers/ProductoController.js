@@ -5,7 +5,7 @@ const crearProducto = (req, res) => {
     return res.status(201).json({
       ok: true,
       content: productoCreado,
-      message: null,
+      message: "Producto creado exitosamente",
     });
   }).catch(error=>res.status(500).json({
       ok: false,
