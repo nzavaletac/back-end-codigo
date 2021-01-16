@@ -21,8 +21,30 @@ const registrarUsuario = async (req, res) => {
     });
   }
 };
-const login = (req, res)=>{}
+
+const login = async (req, res) => {
+  let usuario = await Usuario.findOne({
+    where: {
+      usuarioCorreo: req.body.correo,
+    },
+  });
+  if (usuario) {
+    let resultado = usuario.validarPassword(req.body.password);
+    console.log(resultado);
+    return res.json({
+      ok: true,
+      content: usuario,
+    });
+  } else {
+    return res.status(400).json({
+      ok: false,
+      content: null,
+      message: "Usuario o contraseña incorrectos",
+    });
+  }
+};
 
 module.exports = {
   registrarUsuario,
+  login,
 };

@@ -98,6 +98,10 @@ const usuario_model = (conexion) => {
     );
     return token;
   };
+  usuario.prototype.validarPassword = function (password) {
+    let hashTemporal = crypto.pbkdf2Sync(password, this.usuarioSalt, 1000, 64, "sha512").toString('hex');
+    return hashTemporal === this.usuarioHash ? true : false;
+  }
 
   return usuario;
 };
