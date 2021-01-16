@@ -1,4 +1,4 @@
-const { Usuario } = require("../config/Sequelize");
+const { Usuario, Imagen } = require("../config/Sequelize");
 
 const registrarUsuario = async (req, res) => {
   try {
@@ -31,20 +31,54 @@ const login = async (req, res) => {
   if (usuario) {
     let resultado = usuario.validarPassword(req.body.password);
     console.log(resultado);
+    // Si el resultado es true, devolver el JWT y si es false devolver en content:null y message:"Usuario o contraseña incorrectos"
+    if (resultado) {
+      return res.json({
+        ok: true,
+        content: usuario.generarJWT(),
+      });
+    }
+  }
+  return res.status(400).json({
+    ok: false,
+    content: null,
+    message: "Usuario o contraseña incorrectos",
+  });
+};
+
+const devolverUsuarioPorToken = (req, res) => {
+  console.log(req.usuario);
+  let { usuarioId } = req.usuario;
+  // EJERCICIO 1: solamente quiero ver el usuarioId, usuarioFechaNacimiento, usuarioNombre, usuarioCorreo, usuarioDireccion, imagenId y usuarioTelefono
+  // obviar el usuarioHash, usuarioSalt, usuarioTipo
+  // EJERCICIO 2: Devolver la imagenURL de la imagen del usuario
+  Usuario.findOne({
+    // Solucion Ejercicio 1
+    attributes: {
+      exclude: ["usuarioHash", "usuarioSalt", "usuarioTipo", "imagen_id"],
+    },
+    // attributes : ['usuarioId', 'usuarioFechaNacimiento', 'usuarioNombre', 'usuarioCorreo', 'usuarioDireccion', 'imagen_id', 'usuarioTelefono'],
+    // Solucion Ejercicio 2
+    include: {
+      model: Imagen,
+      attributes: ["imagenId"],
+    },
+    where: {
+      usuarioId,
+    },
+  }).then((usuarioEncontrado) => {
+    usuarioEncontrado.imagene.dataValues.imagenId = "/devolverImagen/"+usuarioEncontrado.imagene.imagenId;
     return res.json({
       ok: true,
-      content: usuario,
+      content: usuarioEncontrado,
+      url: req.originalUrl,
+      message: null,
     });
-  } else {
-    return res.status(400).json({
-      ok: false,
-      content: null,
-      message: "Usuario o contraseña incorrectos",
-    });
-  }
+  });
 };
 
 module.exports = {
   registrarUsuario,
   login,
+  devolverUsuarioPorToken,
 };

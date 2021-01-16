@@ -14,6 +14,15 @@ const crearProducto = (req, res) => {
   }));
 };
 
+const listarProducto = (req,res)=>{
+  Producto.findAll().then(productos=>res.json({
+    ok:true,
+    content: productos,
+    message: null
+  }))
+}
+
 module.exports = {
   crearProducto,
+  listarProducto,
 };
