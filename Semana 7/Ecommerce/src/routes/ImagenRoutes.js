@@ -14,5 +14,5 @@ const multipartyMiddleware = multiparty({
 
 imagen_router.post('/subirImagen',multipartyMiddleware ,imagen_controller.subirImagen);
 imagen_router.get('/devolverImagen/:id', imagen_controller.devolverImagenPorId);
-
+imagen_router.put('/actualizarImagen/:id', imagen_controller.actualizarImagen);
 module.exports = imagen_router;
