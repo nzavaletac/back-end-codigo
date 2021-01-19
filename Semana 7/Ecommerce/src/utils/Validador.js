@@ -23,7 +23,31 @@ const wachiman = (req, res, next) => {
     let respuesta = verificarToken(token); // me devuelve el payload
     // console.log(respuesta);
     if (respuesta) {
+      // SEGUNDO METODO EJERCICIO 1
       req.usuario = respuesta;
+      next();
+    } else {
+      return res.status(401).json({
+        ok: false,
+        content: "No estas autorizado para realizar esta solicitud",
+      });
+    }
+  } else {
+    return res.status(401).json({
+      ok: false,
+      message: "Necesitas estar autenticado para realizar esta peticion",
+    });
+  }
+};
+
+const validarAdmin = (req, res, next) => {
+  // acá hacemos la validacion
+  // Primer metodo EJERCICIO 1
+  if (req.headers.authorization) {
+    let token = req.headers.authorization.split(" ")[1];
+    let respuesta = verificarToken(token);
+    console.log(respuesta);
+    if (respuesta && respuesta.usuarioTipo === 1) {
       next();
     } else {
       return res.status(401).json({
@@ -41,4 +65,5 @@ const wachiman = (req, res, next) => {
 
 module.exports = {
   wachiman,
+  validarAdmin,
 };
