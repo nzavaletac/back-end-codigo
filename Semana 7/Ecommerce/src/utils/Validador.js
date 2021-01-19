@@ -47,9 +47,11 @@ const validacionMultiple = (tipo, authorization, res, next) => {
     let respuesta = verificarToken(token);
     switch (tipo) {
       case 1:
+        console.log(respuesta);
         if (respuesta && respuesta.usuarioTipo === 1) {
           return next();
         }
+        break;
       case 2:
         if (
           respuesta &&
@@ -57,6 +59,7 @@ const validacionMultiple = (tipo, authorization, res, next) => {
         ) {
           return next();
         }
+        break;
       default:
         break;
     }
@@ -125,8 +128,17 @@ const validarAdminYVendedor = (req, res, next) => {
   */
 };
 
+const validarCreacionPersonal = (req,res,next)=>{
+  let {usuarioTipo} = req.body;
+  if ( usuarioTipo === 1 || usuarioTipo === 2){
+    return validacionMultiple(1, req.headers.authorization, res, next);
+  }
+  next();
+}
+
 module.exports = {
   wachiman,
   validarAdmin,
   validarAdminYVendedor,
+  validarCreacionPersonal
 };
