@@ -39,8 +39,43 @@ const wachiman = (req, res, next) => {
     });
   }
 };
-
+const validacionMultiple = (tipo, authorization, res, next) => {
+  // tipo =1 => validar admin
+  // tipo = 2 => validar admin y vendedor
+  if (authorization) {
+    let token = authorization.split(" ")[1];
+    let respuesta = verificarToken(token);
+    switch (tipo) {
+      case 1:
+        if (respuesta && respuesta.usuarioTipo === 1) {
+          return next();
+        }
+      case 2:
+        if (
+          respuesta &&
+          (respuesta.usuarioTipo === 1 || respuesta.usuarioTipo === 2)
+        ) {
+          return next();
+        }
+      default:
+        break;
+    }
+    return res.status(401).json({
+      ok: false,
+      content: "No estas autorizado para realizar esta solicitud",
+    });
+  } else {
+    return res.status(401).json({
+      ok: false,
+      message: "Necesitas estar autenticado para realizar esta peticion",
+    });
+  }
+};
 const validarAdmin = (req, res, next) => {
+  return validacionMultiple(1, req.headers.authorization, res, next);
+
+  /*
+
   // acá hacemos la validacion
   // Primer metodo EJERCICIO 1
   if (req.headers.authorization) {
@@ -61,9 +96,37 @@ const validarAdmin = (req, res, next) => {
       message: "Necesitas estar autenticado para realizar esta peticion",
     });
   }
+  */
+};
+
+const validarAdminYVendedor = (req, res, next) => {
+  return validacionMultiple(2, req.headers.authorization, res, next);
+  /*
+  if (req.headers.authorization) {
+    let token = req.headers.authorization.split(" ")[1];
+    let respuesta = verificarToken(token);
+    if (
+      (respuesta && respuesta.usuarioTipo === 1) ||
+      respuesta.usuarioTipo === 2
+    ) {
+      next();
+    } else {
+      return res.status(401).json({
+        ok: false,
+        content: "No estas autorizado para realizar esta solicitud",
+      });
+    }
+  } else {
+    return res.status(401).json({
+      ok: false,
+      message: "Necesitas estar autenticado para realizar esta peticion",
+    });
+  }
+  */
 };
 
 module.exports = {
   wachiman,
   validarAdmin,
+  validarAdminYVendedor,
 };

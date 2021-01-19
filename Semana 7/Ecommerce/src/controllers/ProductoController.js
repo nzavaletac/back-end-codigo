@@ -15,8 +15,8 @@ const crearProducto = (req, res) => {
 };
 
 const listarProducto = (req,res)=>{
-  console.log('estoy dentro de listar producto');
-  console.log(req.usuario);
+  // console.log('estoy dentro de listar producto');
+  // console.log(req.usuario);
   Producto.findAll().then(productos=>res.json({
     ok:true,
     content: productos,
