@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-
+const { Usuario } = require("../config/Sequelize");
 const verificarToken = (token) => {
   try {
     // verificar si la token recibida cumple ciertas condiciones como: ver si aun tiene tiempo de vida, si la contraseña es correcta y si tiene un formato correcto
@@ -128,17 +128,25 @@ const validarAdminYVendedor = (req, res, next) => {
   */
 };
 
-const validarCreacionPersonal = (req,res,next)=>{
-  let {usuarioTipo} = req.body;
-  if ( usuarioTipo === 1 || usuarioTipo === 2){
-    return validacionMultiple(1, req.headers.authorization, res, next);
+const validarCreacionPersonal = async (req, res, next) => {
+  // Si no hay ni un solo usuario creado, no voy a poder crear ni un usuario tipo admin o vendedor ya que se necesita un usuario admin para crear uno de ellos.
+  let usuario = await Usuario.findOne({
+    where: {
+      usuarioTipo: 1
+    },
+  });
+  if (usuario) {
+    let { usuarioTipo } = req.body;
+    if (usuarioTipo === 1 || usuarioTipo === 2) {
+      return validacionMultiple(1, req.headers.authorization, res, next);
+    }
   }
   next();
-}
+};
 
 module.exports = {
   wachiman,
   validarAdmin,
   validarAdminYVendedor,
-  validarCreacionPersonal
+  validarCreacionPersonal,
 };
