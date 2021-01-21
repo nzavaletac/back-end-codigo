@@ -1,1 +1,3 @@
-console.log('Hola');
+const Server = require("./config/server");
+const servidor = new Server();
+servidor.start();

@@ -1,6 +1,8 @@
-import express from "express"; // asi se maneja la importacion en TS
-// const express = require("express");
+// import express from "express"; // asi se maneja la importacion en TS
+const express = require("express");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+
 module.exports = class Server {
   constructor() {
     this.app = express();
@@ -29,7 +31,12 @@ module.exports = class Server {
       })
     );
   }
-  conectarMongoDb() {}
+  conectarMongoDb() {
+    mongoose.connect("mongodb://localhost:27017/plataforma_educativa", {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+  }
   start() {
     this.app.listen(this.puerto, () =>
       console.log("Servidor corriendo exitosamente en el puerto", this.puerto)
