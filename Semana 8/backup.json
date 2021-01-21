@@ -1,0 +1,26 @@
+[{
+  "_id": {
+    "$oid": "6008c901189c19232d29895a"
+  },
+  "nombre": "Eduardo",
+  "apellido": "de Rivero",
+  "fecha_nacimiento": {
+    "$date": "1991-01-08T05:00:00Z"
+  },
+  "estado_civil": "soltero"
+},{
+  "_id": {
+    "$oid": "6008cbe4189c19232d29895b"
+  },
+  "nombre": "rosa",
+  "apellido": "martinez",
+  "fecha_nacimiento": {
+    "$date": "1985-07-14T05:00:00Z"
+  },
+  "estado_civil": "casado"
+},{
+  "_id": {
+    "$oid": "6008cc87189c19232d29895c"
+  },
+  "direccion": "los rosales 115"
+}]

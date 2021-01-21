@@ -48,7 +48,6 @@ const crearVenta = async (req, res) => {
         content: null,
       });
     }
-
     // 2. Crear la cabecera
     let cabeceraCreada = await CabeceraVenta.create(
       {
