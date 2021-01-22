@@ -12,6 +12,6 @@ const direccionSchema = new Schema({
         maxlength: 60,
         required: true
     }
-})
+},{_id:false})
 
 module.exports = direccionSchema;

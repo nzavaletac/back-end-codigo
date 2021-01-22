@@ -32,14 +32,19 @@ module.exports = class Server {
         content: null,
       });
     });
-    // this.app.use("", usuario_router);
+    this.app.use("", usuario_router);
   }
   connectarMongoDb() {
-    // connect("mongodb+srv://m001-student:mongodbatlas@pruebas.9uqnz.mongodb.net/crud?retryWrites=true&w=majority");
+    // connect("mongodb+srv://m001-student:mongodbatlas@pruebas.9uqnz.mongodb.net/crud?retryWrites=true&w=majority",{
+    //     useNewUrlParser:true,
+    //     useUnifiedTopology: true,
+    //     useCreateIndex:true
+    // });
     connect("mongodb://localhost:27017/crud",{
         useNewUrlParser:true,
         useUnifiedTopology: true,
-        useCreateIndex:true
+        useCreateIndex:true,
+        useFindAndModify: false
     });
   }
   start() {
