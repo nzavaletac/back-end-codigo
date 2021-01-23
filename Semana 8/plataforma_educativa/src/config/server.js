@@ -3,6 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const usuario_router = require("../routes/usuario");
+const curso_router = require("../routes/curso");
 
 module.exports = class Server {
   constructor() {
@@ -31,7 +32,8 @@ module.exports = class Server {
         content: "La api funciona exitosamente",
       })
     );
-    this.app.use("", usuario_router);
+    this.app.use("", usuario_router, curso_router);
+    
   }
   conectarMongoDb() {
     // mongodb+srv://m001-student:mongodbatlas@pruebas.9uqnz.mongodb.net/plataforma_educativa_eduardo?retryWrites=true&w=majority
