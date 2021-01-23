@@ -1,5 +1,5 @@
 const {Schema}= require("mongoose");
-
+const imagenSchema = require("./imagen");
 
 const cursoSchema = new Schema({
     curso_nombre : {
@@ -17,8 +17,12 @@ const cursoSchema = new Schema({
     curso_fecha_lanzamiento: {
         type: Date,
         min:'2021-01-01',
-        max:'2021-12-31'
-    }
+        max:'2021-12-31',
+        default: Date.now()
+    },
+    curso_imagenes: [imagenSchema],
+    usuarios: [String],
+    comentarios: [String]
 });
 
 module.exports = cursoSchema;

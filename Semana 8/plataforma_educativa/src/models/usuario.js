@@ -1,4 +1,5 @@
 const { Schema } = require("mongoose");
+const imagenSchema = require("./imagen");
 // en bd no relacionales las tablas pasan a llamarse colecciones y dentro de mongoose se denomina Schema
 const fonoUsuarioSchema = new Schema({
     fono_codigo: {
@@ -29,11 +30,17 @@ const usuarioSchema = new Schema({
         required: true,
     },
     usuario_hash: String,
-    usuario_salt: String,
-    usuario_categoria: Number,
+    usuario_categoria: {
+        type: Number,
+        min: 1,
+        max: 4
+    },
     usuario_telefono : [
         fonoUsuarioSchema
-    ]
+    ],
+    usuario_imagen: imagenSchema,
+    cursos: [String],
+    comentarios: [Schema.Types.String]
     // String, Number, Date, Buffet, Boolean, Mixed, ObjectId, Array, Decimal128, Map, Schema
 }, {timestamps: true});
 
