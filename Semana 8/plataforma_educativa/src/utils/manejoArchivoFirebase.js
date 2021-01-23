@@ -2,7 +2,7 @@ const { Storage } = require("@google-cloud/storage");
 // Inicializo mi objeto de Firebase para poner conectarme con mi Bucket
 const credenciales = {
   projectId: "codigo-backend-eduardo",
-  keyFileName: "./credenciales_firebase.json",
+  keyFilename: "./credenciales_firebase.json",
 };
 const storage = new Storage(credenciales);
 // se crea la variable bucket que se usa como referencia al link del storage

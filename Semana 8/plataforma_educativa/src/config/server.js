@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const usuario_router = require("../routes/usuario");
 const curso_router = require("../routes/curso");
+const imagen_router = require("../routes/imagen");
 
 module.exports = class Server {
   constructor() {
@@ -32,7 +33,7 @@ module.exports = class Server {
         content: "La api funciona exitosamente",
       })
     );
-    this.app.use("", usuario_router, curso_router);
+    this.app.use("", usuario_router, curso_router, imagen_router);
     
   }
   conectarMongoDb() {
