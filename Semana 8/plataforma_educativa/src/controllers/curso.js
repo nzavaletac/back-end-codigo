@@ -21,7 +21,7 @@ const crearCurso = async (req, res) => {
 };
 
 const listarCursos = (req, res) => {
-  Curso.find().then(cursos =>
+  Curso.find().then((cursos) =>
     res.json({
       ok: true,
       content: cursos,
@@ -30,9 +30,37 @@ const listarCursos = (req, res) => {
   );
 };
 
-const listarCursosPorNombre = (req, res) => {
-    // devolver solamente los cursos que coincidan con el nombre y ademas que esten activos
-    // Curso.where({...})
+const listarCursosPorNombre = async (req, res) => {
+  // devolver solamente los cursos que coincidan con el nombre y ademas que esten activos
+  // Curso.find().where({...})
+  let { nombre } = req.params;
+  // * PRIMERA FORMA
+  /*
+    let resultado = await Curso.find({
+        curso_nombre : {$regex: '.*'+nombre+'.*'},
+        curso_publicado: true
+    })
+    */
+  // * SEGUNDA FORMA
+  /*
+    let resultado = await Curso.where({
+        curso_nombre : {$regex: '.*'+nombre+'.*'},
+        curso_publicado: true
+    })
+    */
+
+  // * TERCERA FORMA
+  let resultado = await Curso
+    .where("curso_nombre")
+    .equals({ $regex: ".*" + nombre + ".*" })
+    .where("curso_publicado")
+    .equals(true);
+  // https://mongoosejs.com/docs/api/query.html#query_Query-equals
+  return res.json({
+    ok: true,
+    content: resultado,
+    message: null,
+  });
 };
 
 module.exports = {
