@@ -2,6 +2,7 @@ const { Schema } = require("mongoose");
 const imagenSchema = require("./imagen");
 // * https://www.npmjs.com/package/bcrypt
 const bcrypt = require("bcrypt");
+const { sign } = require("jsonwebtoken");
 // en bd no relacionales las tablas pasan a llamarse colecciones y dentro de mongoose se denomina Schema
 const fonoUsuarioSchema = new Schema({
     fono_codigo: {
@@ -30,6 +31,7 @@ const usuarioSchema = new Schema({
         type: String,
         maxlength: 50,
         required: true,
+        unique: true
     },
     usuario_hash: String,
     usuario_categoria: {
@@ -62,6 +64,22 @@ usuarioSchema.methods.encriptarPassword = async function (password) {
     }).catch((error)=>{
         console.log(error);
     })
+}
+usuarioSchema.methods.generarJWT = function(){
+    let payload= {
+        usuario_id: this._id,
+        usuario_nombre : this.usuario_nombre+' '+this.usuario_apellido,
+        usuario_categoria: this.usuario_categoria
+    }
+    let password = process.env.JWT_SECRET || 'mongoAPI'
+    // que la token expire en una hora
+    return sign(payload, password, {expiresIn:'1h'}, {algorithm:'RS256'});
+}
+usuarioSchema.methods.validarPassword = async function(password){
+    // compara la hash con la contraseña y si son iguales retorna true, caso contrario retorna false
+    let resultado = await bcrypt.compare(password,this.usuario_hash);
+    return resultado;
+
 }
 
 module.exports = usuarioSchema;

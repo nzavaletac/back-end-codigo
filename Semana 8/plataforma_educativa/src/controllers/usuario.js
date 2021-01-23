@@ -7,9 +7,10 @@ const crearUsuario = async (req, res) => {
     await objUsuario.encriptarPassword(req.body.password);
     // luego que ya tengo todos mis campos seteados correctamente, tengo que ahora guardar en la bd
     let usuarioCreado = await objUsuario.save();
+    let token = usuarioCreado.generarJWT();
     return res.status(201).json({
       ok: true,
-      content: usuarioCreado,
+      content: token,
       message: "Usuario creado exitosamente",
     });
   } catch (error) {
@@ -20,7 +21,37 @@ const crearUsuario = async (req, res) => {
     });
   }
 };
+const login= async (req, res)=>{
+  let {correo, password} = req.body;
+  // https://mongoosejs.com/docs/queries.html
+  let usuarioEncontrado = await Usuario.findOne({
+    usuario_email:correo
+  });
+  if(usuarioEncontrado === null){
+    return res.status(404).json({
+      ok:false,
+      content:null,
+      message:'Correo o contraseña incorrectos'
+    })
+  }
+  let validacion = await usuarioEncontrado.validarPassword(password);
+  if (validacion){
+    let token = usuarioEncontrado.generarJWT();
+    return res.status(200).json({
+      ok:true,
+      content:token,
+      message:null
+    })
+  }else{
+    return res.status(404).json({
+      ok:false,
+      content:null,
+      message:'Correo o contraseña incorrectos'
+    })
+  }
+};
 
 module.exports = {
-    crearUsuario
+    crearUsuario,
+    login
 }
