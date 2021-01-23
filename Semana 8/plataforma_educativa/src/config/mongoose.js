@@ -1,10 +1,15 @@
 const usuarioSchema = require("../models/usuario");
 const cursoSchema = require("../models/curso");
-const {model} = require("mongoose");
+const comentarioSchema = require("../models/comentario");
 
-const Usuario = model('usuario',usuarioSchema);
-const Curso = model('curso', cursoSchema);
+const { model } = require("mongoose");
+
+const Usuario = model("usuario", usuarioSchema);
+const Curso = model("curso", cursoSchema);
+const ComentarioSchema = model("comentario", comentarioSchema);
+
 module.exports = {
-    Usuario,
-    Curso
-}
+  Usuario,
+  Curso,
+  ComentarioSchema,
+};

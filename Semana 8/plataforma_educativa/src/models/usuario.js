@@ -1,5 +1,7 @@
 const { Schema } = require("mongoose");
 const imagenSchema = require("./imagen");
+// * https://www.npmjs.com/package/bcrypt
+const bcrypt = require("bcrypt");
 // en bd no relacionales las tablas pasan a llamarse colecciones y dentro de mongoose se denomina Schema
 const fonoUsuarioSchema = new Schema({
     fono_codigo: {
@@ -43,5 +45,23 @@ const usuarioSchema = new Schema({
     comentarios: [Schema.Types.String]
     // String, Number, Date, Buffet, Boolean, Mixed, ObjectId, Array, Decimal128, Map, Schema
 }, {timestamps: true});
+
+usuarioSchema.methods.encriptarPassword = async function (password) {
+    // Por si queremos guardar el salt o generar uno previamente:
+    // bcrypt.genSalt(10)
+    await bcrypt.hash(password,10
+        /*
+        ,(error,pwdEncripted)=>{
+        this.usuario_hash = pwdEncripted;
+        console.log(error);
+    }
+    */
+    ).then((pwdEncripted)=>{
+        console.log(pwdEncripted);
+        this.usuario_hash = pwdEncripted
+    }).catch((error)=>{
+        console.log(error);
+    })
+}
 
 module.exports = usuarioSchema;
