@@ -11,7 +11,7 @@ const bucket = storage.bucket("codigo-backend-eduardo.appspot.com");
 
 const subirArchivo = (archivo) => {
   return new Promise((resolve, reject) => {
-    if (!archivo) {
+    if (!archivo) { // es lo mismo que poner archivo === null | undefined
       reject("No se encontro el archivo");
     }
     // Modificamos el nombre original para prevenir que el usuario pueda sobreescribir un archivo con el mismo nombre
@@ -33,7 +33,7 @@ const subirArchivo = (archivo) => {
       fileUpload
         .getSignedUrl({
           action: "read",
-          expires: "12-12-2021",
+          expires: "01-26-2021", // MM-DD-YYYY
         })
         .then((link) => resolve(link))
         .catch((error) => reject(`Error al devolver el link: ${error}`));
