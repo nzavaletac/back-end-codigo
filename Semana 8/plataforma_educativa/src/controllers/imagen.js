@@ -1,4 +1,4 @@
-const { subirArchivo } = require("../utils/manejoArchivoFirebase");
+const { subirArchivo, eliminarArchivoFirebase } = require("../utils/manejoArchivoFirebase");
 const { Usuario, Curso } = require("../config/mongoose");
 
 const subirImagen = async (req, res) => {
@@ -59,7 +59,23 @@ const subirImagen = async (req, res) => {
 const eliminarImagenUsuario = async(req, res)=>{
   // al eliminar la imagen del usuario me mandara solamente su id y tendremos que buscar en la bd el nombre de la imagen
   // ruta => 127.0.0.1:5000/eliminarImgUsu/asd5as1d51ad
-  
+  // ruta => 127.0.0.1:5000/eliminarImgUsu/:id
+  // portrait.jpg_1611627176980
+  let {id} = req.params;
+  let usuarioEncontrado = await Usuario.findById(id);
+  let url = usuarioEncontrado.usuario_imagen.imagen_url;
+  // asdkjasldkjasdj?asdjlkajsdalsjdk
+  // ['asdkjasldkjasdj','asdjlkajsdalsjdk']
+  let subimagen =url.split('.com/')[2];
+  let imagen = subimagen.split('?')[0];
+  console.log(imagen);
+  usuarioEncontrado.usuario_imagen.imagen_url = "";
+  await usuarioEncontrado.save();
+  eliminarArchivoFirebase(imagen);
+  return res.json({
+    ok:true,
+    content: usuarioEncontrado
+  })
 
 }
 

@@ -43,6 +43,12 @@ const subirArchivo = (archivo) => {
   });
 };
 
+const eliminarArchivoFirebase = async(nombre)=>{
+  let rpta = await bucket.file(nombre).delete();
+  console.log(rpta);
+}
+
 module.exports = {
   subirArchivo,
+  eliminarArchivoFirebase
 };
