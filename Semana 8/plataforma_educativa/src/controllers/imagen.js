@@ -64,8 +64,6 @@ const eliminarImagenUsuario = async(req, res)=>{
   let {id} = req.params;
   let usuarioEncontrado = await Usuario.findById(id);
   let url = usuarioEncontrado.usuario_imagen.imagen_url;
-  // asdkjasldkjasdj?asdjlkajsdalsjdk
-  // ['asdkjasldkjasdj','asdjlkajsdalsjdk']
   let subimagen =url.split('.com/')[2];
   let imagen = subimagen.split('?')[0];
   console.log(imagen);
