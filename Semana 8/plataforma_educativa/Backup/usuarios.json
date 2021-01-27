@@ -1,0 +1,36 @@
+[{
+  "_id": {
+    "$oid": "6010ce669fcdf4483c370898"
+  },
+  "cursos": [
+    {
+      "$oid": "6010ce6c9fcdf4483c370899"
+    }
+  ],
+  "comentarios": [],
+  "usuario_nombre": "Eduardo",
+  "usuario_apellido": "de rivero",
+  "usuario_email": "ederiveroman@gmail.com",
+  "usuario_categoria": 2,
+  "usuario_telefono": [
+    {
+      "fono_codigo": 54,
+      "fono_numero": "458946"
+    },
+    {
+      "fono_codigo": 84,
+      "fono_numero": "485926"
+    }
+  ],
+  "usuario_imagen": {
+    "imagen_url": "https://www.hola.com/imagenes/estar-bien/20180925130054/consejos-para-cuidar-a-un-gatito-recien-nacido-cs/0-601-526/cuidardgatito-t.jpg"
+  },
+  "usuario_hash": "$2b$10$x5kxJTk9SsSxHtw6k1.WtO1ATLaXeSFX/ijw3AXxxwd6UKVlSxse6",
+  "createdAt": {
+    "$date": "2021-01-27T02:22:31.012Z"
+  },
+  "updatedAt": {
+    "$date": "2021-01-27T02:22:48.902Z"
+  },
+  "__v": 1
+}]

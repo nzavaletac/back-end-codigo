@@ -81,8 +81,19 @@ const inscribirUsuarioCurso = async(req, res)=>{
         message:'Usuario ya se encuentra enrolado en el curso'
       })
     }
+    // Paso 4
+    console.log(usuarioEncontrado._id.toString());
+    cursoEncontrado.usuarios.push(usuarioEncontrado);
+    cursoEncontrado.save();
 
-    return res.send('ok');
+    usuarioEncontrado.cursos.push(cursoEncontrado._id);
+    usuarioEncontrado.save();
+    return res.status(201).json({
+      ok:true,
+      content: null,
+      message:'Usuario enrolado al curso exitosamente'
+    })
+
   } catch (error) {
     return res.status(401).json({
       ok:false,

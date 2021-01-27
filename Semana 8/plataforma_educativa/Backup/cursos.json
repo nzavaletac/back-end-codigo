@@ -1,0 +1,33 @@
+[{
+  "_id": {
+    "$oid": "6010ce6c9fcdf4483c370899"
+  },
+  "curso_fecha_lanzamiento": {
+    "$date": "2021-01-27T02:22:06.963Z"
+  },
+  "usuarios": [
+    {
+      "$oid": "6010ce669fcdf4483c370898"
+    }
+  ],
+  "comentarios": [],
+  "curso_publicado": true,
+  "curso_nombre": "ANGULAR1",
+  "curso_descripcion": "Buen curso en react con POO",
+  "curso_link": "http://www.google.com",
+  "curso_imagenes": [
+    {
+      "imagen_url": "https://www.hola.com/imagenes/estar-bien/20180925130054/consejos-para-cuidar-a-un-gatito-recien-nacido-cs/0-601-526/cuidardgatito-t.jpg"
+    }
+  ],
+  "curso_videos": [
+    {
+      "video_url": "https://youtu.be/zlOaObf5yR0",
+      "video_orden": 1,
+      "video_nombre": "Introduccion"
+    }
+  ],
+  "curso_costo": 9.99,
+  "curso_duracion": "10 horas",
+  "__v": 1
+}]
