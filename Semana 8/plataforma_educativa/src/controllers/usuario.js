@@ -103,8 +103,25 @@ const inscribirUsuarioCurso = async(req, res)=>{
   }
 };
 
-const mostrarCursosUsuario = (req, res)=>{
-
+const mostrarCursosUsuario = async(req, res)=>{
+  /*
+  1. necesitaria el JWT
+  2. validar el usuario
+  3. iterar los cursos de esos usuario y buscarlo en la coleccion cursos
+  4. devolver los cursos con sus curso_nombre, curso_link y curso_imagenes
+  */
+  let {usuario_id} = req.usuario;
+  const usuarioEncontrado = await Usuario.findById(usuario_id);
+  const {cursos} = usuarioEncontrado;
+  let resultado = [];
+  for (const key in cursos) {
+    const cursoEncontrado = await Curso.findById(cursos[key],'curso_nombre curso_link curso_imagenes');
+    resultado.push(cursoEncontrado);
+  }
+  res.json({
+    ok: true,
+    content: resultado
+  })
 }
 
 module.exports = {
