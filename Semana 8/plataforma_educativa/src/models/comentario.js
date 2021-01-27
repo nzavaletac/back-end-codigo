@@ -11,12 +11,12 @@ const comentarioSchema = new Schema(
       required: true,
     },
     usuario: {
-      type: String,
+      type: Schema.Types.ObjectId,
       required: true,
       trim: true,
     },
     curso: {
-      type: String,
+      type: Schema.Types.ObjectId,
       required: true,
       trim: true,
     },

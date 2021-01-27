@@ -43,8 +43,8 @@ const usuarioSchema = new Schema({
         fonoUsuarioSchema
     ],
     usuario_imagen: imagenSchema,
-    cursos: [String],
-    comentarios: [Schema.Types.String]
+    cursos: [Schema.Types.ObjectId],
+    comentarios: [Schema.Types.ObjectId]
     // String, Number, Date, Buffet, Boolean, Mixed, ObjectId, Array, Decimal128, Map, Schema
 }, {timestamps: true});
 

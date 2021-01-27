@@ -43,9 +43,18 @@ const subirArchivo = (archivo) => {
   });
 };
 
-const eliminarArchivoFirebase = async(nombre)=>{
-  let rpta = await bucket.file(nombre).delete();
-  console.log(rpta);
+const eliminarArchivoFirebase = async(url)=>{
+  let subimagen =url.split('.com/')[2];
+  let imagen = subimagen.split('?')[0];
+  // al momento de eliminar un archivo que no existe ya en firebase storage me indica por consola que no existe, como se podría controlar para indicar al cliente que se elimino de la bd pero no se encontro el archivo en el storage
+  try {
+    let rpta = await bucket.file(imagen).delete();
+    console.log(rpta);
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
 }
 
 module.exports = {

@@ -43,8 +43,8 @@ const cursoSchema = new Schema({
         default: horaPeruana
     },
     curso_imagenes: [imagenSchema],
-    usuarios: [String],
-    comentarios: [String],
+    usuarios: [Schema.Types.ObjectId],
+    comentarios: [Schema.Types.ObjectId],
     // si el padre no le indicamos que sea required, pero a los hijos si les indicamos, no va a respetar esa normativa
     curso_videos: {
         type: [contenidoSchema],

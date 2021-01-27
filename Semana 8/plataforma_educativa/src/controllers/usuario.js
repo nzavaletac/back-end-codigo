@@ -51,7 +51,23 @@ const login= async (req, res)=>{
   }
 };
 
+const inscribirUsuarioCurso = (req, res)=>{
+  /*
+  1. usar JWT para ver que usuario esta queriendo acceder a que curso
+  2. mediante la url indicar el id del curso 
+  3. ver si el usuario ya esta inscrito en el curso y si lo esta indicar que ya no se puede enrolar en el curso
+  4. si no esta inscrito enrolarlo en el curso y responder que se registro exitosamente
+  */
+  return res.send('ok');
+
+}
+const mostrarCursosUsuario = (req, res)=>{
+
+}
+
 module.exports = {
     crearUsuario,
-    login
+    login,
+    inscribirUsuarioCurso,
+    mostrarCursosUsuario
 }

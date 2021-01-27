@@ -13,8 +13,8 @@ const multer = Multer({
 
 });
 
-imagen_router.post("/subirImagen",multer.single('imagen'),imagen_controller.subirImagen);
-imagen_router.delete("/eliminarImgUsu/:id",imagen_controller.eliminarImagenUsuario);
-
+imagen_router.post("/subirImagen", multer.single('imagen'),imagen_controller.subirImagen);
+imagen_router.delete("/eliminarImgUsu/:id", imagen_controller.eliminarImagenUsuario);
+imagen_router.delete("/eliminarImgCurso/:id/:posicion", imagen_controller.eliminarImagenCurso);
 
 module.exports = imagen_router;

@@ -64,20 +64,48 @@ const eliminarImagenUsuario = async(req, res)=>{
   let {id} = req.params;
   let usuarioEncontrado = await Usuario.findById(id);
   let url = usuarioEncontrado.usuario_imagen.imagen_url;
-  let subimagen =url.split('.com/')[2];
-  let imagen = subimagen.split('?')[0];
-  console.log(imagen);
+  // let subimagen =url.split('.com/')[2];
+  // let imagen = subimagen.split('?')[0];
+  // console.log(imagen);
   usuarioEncontrado.usuario_imagen.imagen_url = "";
   await usuarioEncontrado.save();
-  eliminarArchivoFirebase(imagen);
+  eliminarArchivoFirebase(url);
   return res.json({
     ok:true,
-    content: usuarioEncontrado
+    content: usuarioEncontrado,
+    message: 'Se elimino la imagen del usuario exitosamente'
   })
+}
+const eliminarImagenCurso = async(req, res)=>{
+  // el id del curso y la posicion de la imagen
+  // 127.0.0.1:5000/eliminarImgCurso/:id/:posicion
+  let {id, posicion} = req.params;
+  let cursoEncontrado = await Curso.findById(id);
+  let imagen = cursoEncontrado.curso_imagenes[posicion];
+  // let subimagen =imagen.imagen_url.split('.com/')[2];
+  // let nombreImagen = subimagen.split('?')[0];
+  // console.log(imagen.imagen_url);
+  let resultadoFirebase = await eliminarArchivoFirebase(imagen.imagen_url);
+  cursoEncontrado.curso_imagenes.splice(posicion,1);
+  cursoEncontrado.save();
+  if(resultadoFirebase){
+    return res.json({
+      ok:true,
+      content: null,
+      message:'Imagen eliminada exitosamente'
+    })
+  }
+  return res.json({
+    ok:true,
+    content: null,
+    message:'Imagen eliminada exitosamente de la bd pero no se encontro en el storage'
+  })
+  
 
 }
 
 module.exports = {
   subirImagen,
-  eliminarImagenUsuario
+  eliminarImagenUsuario,
+  eliminarImagenCurso
 };
