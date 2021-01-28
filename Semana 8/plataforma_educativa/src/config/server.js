@@ -38,7 +38,9 @@ module.exports = class Server {
   }
   conectarMongoDb() {
     // mongodb+srv://m001-student:mongodbatlas@pruebas.9uqnz.mongodb.net/plataforma_educativa_eduardo?retryWrites=true&w=majority
-    mongoose.connect("mongodb://localhost:27017/plataforma_educativa", {
+                                  // username   : password           @ cluster                        / bd     ? configuraciones adicionales
+    mongoose.connect("mongodb+srv://virtualback4:codigovirtualbackend@eduardocluster.klaqn.mongodb.net/plataforma_educativa?retryWrites=true&w=majority",{
+    // mongoose.connect("mongodb://localhost:27017/plataforma_educativa", {
       // https://mongoosejs.com/docs/connections.html#options
       useNewUrlParser: true,
       useUnifiedTopology: true,
