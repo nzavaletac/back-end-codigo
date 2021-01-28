@@ -1,5 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const {conexion} = require("./sequelize");
+
 module.exports = class Server {
   constructor() {
     this.app = express();
@@ -30,6 +32,9 @@ module.exports = class Server {
   start() {
     this.app.listen(this.puerto, () => {
       console.log("Servidor corriendo exitosamente!! 😍");
+      conexion.sync().then(()=>{
+          console.log('Base de datos sincronizada correctamente');
+      })
     });
   }
 };

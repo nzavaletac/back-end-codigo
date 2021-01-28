@@ -1,4 +1,4 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes, Sequelize } = require("sequelize");
 
 const voto_model = (conexion) => {
   const voto = conexion.define("votos", {
@@ -10,7 +10,7 @@ const voto_model = (conexion) => {
     },
     voto_fecha: {
       type: DataTypes.DATE,
-      defaultValue: Date.now(),
+      defaultValue: Sequelize.fn('now'),
     },
   },{
       tableName: 't_voto',
