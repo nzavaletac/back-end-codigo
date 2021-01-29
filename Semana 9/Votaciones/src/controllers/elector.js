@@ -36,7 +36,11 @@ const crearElector = async (req, res) => {
     let respuestaCorreo = await clienteCorreo.sendMail({
         to:elector_email,
         subject:'Activa tu cuenta de las votaciones! ✅💯',
-        text:'Por favor haga click en el siguiente enlace para activar su cuenta: ...'
+        text:`Por favor haga click en el siguiente enlace para activar su cuenta: ${req.get('host')}/activarCuenta?id=askdjaksdj`,
+        html:`Hola <b>${informacion.data.nombres} por favor has click en el siguiente enlace para que puedas realizar la votacion.</b>
+
+        ${req.get('host')}/activarCuenta?id=${salt}
+        `
     })
     // fin envio de correo
     const electorCreado = await Elector.create({
