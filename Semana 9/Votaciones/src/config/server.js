@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const {conexion} = require("./sequelize");
 const partido_router = require("../routes/partido");
-
+const elector_router = require("../routes/elector");
 module.exports = class Server {
   constructor() {
     this.app = express();
@@ -29,7 +29,7 @@ module.exports = class Server {
         message: "Bienvenido a mi API de elecciones 😂",
       });
     });
-    this.app.use("", partido_router);
+    this.app.use("", partido_router, elector_router);
   }
   start() {
     this.app.listen(this.puerto, () => {
