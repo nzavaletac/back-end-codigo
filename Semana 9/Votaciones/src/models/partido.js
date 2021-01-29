@@ -24,6 +24,10 @@ const partido_model = (conexion) => {
           isUrl: true,
         },
       },
+      partido_nombre: {
+        type: DataTypes.STRING(30),
+        allowNull: false
+      }
     },
     {
       tableName: "t_partido",

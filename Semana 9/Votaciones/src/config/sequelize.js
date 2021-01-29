@@ -31,8 +31,8 @@ Voto.belongsTo(Elector, { foreignKey: "elector_dni" });
 // SET DEFAULT => este va de la mano con el defaultValue y si es eliminado se reemplazara su valor por el defaultValue
 
 // ! Ejemplo de una relacion muchos a muchos
-Elector.belongsToMany(Voto, {through: 'ElectorVoto'});
-Voto.belongsToMany(Elector, {through: 'ElectorVoto'});
+// Elector.belongsToMany(Voto, {through: 'ElectorVoto'});
+// Voto.belongsToMany(Elector, {through: 'ElectorVoto'});
 // ! Fin ejemplo
 
 Elector.hasMany(VotoCongresal, { foreignKey: { name: "elector_dni", onDelete: 'CASCADE'} });
