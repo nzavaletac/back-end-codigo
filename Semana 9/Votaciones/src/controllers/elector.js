@@ -41,9 +41,9 @@ const crearElector = async (req, res) => {
 
         ${req.get('host')}/activarCuenta?id=${salt}
         `
-    })
+    });
     // fin envio de correo
-    const electorCreado = await Elector.create({
+    await Elector.create({
       elector_dni,
       elector_email,
       elector_tipo,
@@ -66,6 +66,23 @@ const crearElector = async (req, res) => {
   }
 };
 
+const activarElector = async (req, res)=>{
+    console.log(req.query);
+    const {id} = req.query;
+    const elector = await Elector.findOne({
+        where:{
+            elector_hash: id
+        }
+    });
+    console.log(elector);
+    if(elector){
+        return res.render('inicio');
+    }else{
+        return res.render('no_encontrado');
+    }
+}
+
 module.exports = {
   crearElector,
+  activarElector,
 };
