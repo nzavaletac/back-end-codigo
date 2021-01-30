@@ -56,7 +56,6 @@ const crearVoto = async (req, res) => {
         content: null,
       });
     }
-    // validar que los dos congresista a votar no sean los mismos, si lo son indicar que no se puede!!! 🙄 incluir la transaction
 
     // crear el registro
     await VotoCongresal.bulkCreate(

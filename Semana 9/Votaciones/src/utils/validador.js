@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const secret = process.env.JWT || "votaciones";
-
+const { Elector } = require("../config/sequelize");
 const verificarToken = (token) => {
   try {
     const payload = jwt.verify(token, secret, { algorithm: "RS256" });
@@ -39,23 +39,23 @@ const renovarToken = async (req, res) => {
         ok: true,
         message: "la token aun es valida y no necesita renovarse",
       });
-    } else if(typeof respuesta === "string"){
-      if(respuesta === "jwt expired"){
+    } else if (typeof respuesta === "string") {
+      if (respuesta === "jwt expired") {
         // mi token era valida pero ya expiró!
         // el metodo decode sirve para decodificar la token si pasamos su parametro {complete: true} nos dará las tres partes legibles excepto por la contraseña que seguira estando encriptada.
         const decoded = jwt.decode(token);
         // console.log(decoded.elector_dni);
-        const nuevaToken = generarToken({dni: decoded.elector_dni});
+        const nuevaToken = generarToken({ dni: decoded.elector_dni });
         return res.json({
-          ok :true,
-          content: nuevaToken
-        })
-      }else{
+          ok: true,
+          content: nuevaToken,
+        });
+      } else {
         // la contraseña es incorrecta | la token es invalida
         return res.json({
-          ok :false,
-          message:'token incorrecta'
-        })
+          ok: false,
+          message: "token incorrecta",
+        });
       }
     }
   } else {
@@ -80,9 +80,23 @@ const generarToken = ({ dni }) => {
   return token;
 };
 
+const validarAdmin = async (req, res, next) => {
+  const electorEncontrado = await Elector.findByPk(req.user.elector_dni);
+  if(electorEncontrado.elector_tipo === 1){
+    next();
+  }else{
+    return res.json({
+      ok: false,
+      content: null,
+      message: 'Usuario no cuenta con los privilegios suficientes para esta solicitud'
+    })
+  }
+};
+
 module.exports = {
   generarToken,
   verificarToken,
   renovarToken,
-  wachiman
+  wachiman,
+  validarAdmin,
 };
