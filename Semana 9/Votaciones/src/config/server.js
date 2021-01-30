@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const {conexion} = require("./sequelize");
 const partido_router = require("../routes/partido");
 const elector_router = require("../routes/elector");
-const exphbs = require("express-handlebars");
+const exphbs = require("express-handlebars"); // npm i express-handlebars
 module.exports = class Server {
   constructor() {
     this.app = express();
