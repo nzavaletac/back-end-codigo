@@ -48,6 +48,16 @@ const crearVoto = async (req, res) => {
         partido_id: voto_congresal.partido,
       },
     });
+    if (primer_congresista.congresista_numero === segundo_congresista.congresista_numero) {
+      await miTransaccion.rollback();
+      return res.json({
+        ok: false,
+        message: "No esta permitido votar dos veces por el mismo congresista",
+        content: null,
+      });
+    }
+    // validar que los dos congresista a votar no sean los mismos, si lo son indicar que no se puede!!! 🙄 incluir la transaction
+
     // crear el registro
     await VotoCongresal.bulkCreate(
       [
@@ -75,9 +85,9 @@ const crearVoto = async (req, res) => {
     console.log(error);
     return res.json({
       ok: false,
-      content:error,
-      message: "Hubo un error al registrar la votacion"
-    })
+      content: error,
+      message: "Hubo un error al registrar la votacion",
+    });
   }
 };
 module.exports = {
