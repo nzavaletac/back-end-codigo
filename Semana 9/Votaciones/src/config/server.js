@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const {conexion} = require("./sequelize");
 const partido_router = require("../routes/partido");
 const elector_router = require("../routes/elector");
+const voto_router = require("../routes/voto");
 const exphbs = require("express-handlebars"); // npm i express-handlebars
 module.exports = class Server {
   constructor() {
@@ -41,7 +42,7 @@ module.exports = class Server {
         message: "Bienvenido a mi API de elecciones 😂",
       });
     });
-    this.app.use("", partido_router, elector_router);
+    this.app.use("", partido_router, elector_router, voto_router);
   }
   start() {
     this.app.listen(this.puerto, () => {
