@@ -2,6 +2,7 @@ const { Elector } = require("../config/sequelize");
 const bcrypt = require("bcrypt");
 const fetch = require("node-fetch");
 const nodemailer = require("nodemailer");
+const { generarToken } = require("../utils/validador");
 
 const clienteCorreo = nodemailer.createTransport({
   host: "smtp.gmail.com",
@@ -82,23 +83,56 @@ const crearElector = async (req, res) => {
 const activarElector = async (req, res) => {
   console.log(req.query);
   const { id } = req.query;
-  return res.render("no_encontrado");
-  /*
   const elector = await Elector.findOne({
     where: {
       elector_hash: id,
     },
   });
   console.log(elector);
+  // https://handlebarsjs.com/guide/#what-is-handlebars
   if (elector) {
-    return res.render("inicio");
+    // * si el elector ya esta habilitado entonces mostrar otro handlebars en el cual indique el link ya caduco!
+    if (elector.elector_habilitado) {
+      return res.render("error");
+    }
+    elector.elector_habilitado = true;
+    elector.save();
+    return res.render("inicio", {
+      nombre: elector.elector_nombre,
+      apellido: elector.elector_apellido,
+    });
   } else {
     return res.render("no_encontrado");
   }
-  */
 };
 
+const iniciarSesion = async (req, res) => {
+  // hacer la busqueda del elector segun su CORREO y DNI
+  let { dni, email } = req.body;
+  let elector = await Elector.findOne({
+    where: {
+      elector_dni: dni,
+      elector_email: email,
+      elector_habilitado: true,
+    },
+  });
+  if (elector) {
+    const token = generarToken({dni:elector.elector_dni});
+    return res.json({
+      ok: true,
+      content: token,
+      message: null
+    });
+  } else {
+    return res.status(401).json({
+      ok: false,
+      content: null,
+      message: "Elector no registrado o no habilitado revise su correo",
+    });
+  }
+};
 module.exports = {
   crearElector,
   activarElector,
+  iniciarSesion,
 };
