@@ -45,7 +45,7 @@ const renovarToken = async (req, res) => {
         // el metodo decode sirve para decodificar la token si pasamos su parametro {complete: true} nos dará las tres partes legibles excepto por la contraseña que seguira estando encriptada.
         const decoded = jwt.decode(token);
         console.log(decoded.elector_dni);
-        const nuevaToken = generarToken({dni:decoded.elector_dni});
+        const nuevaToken = generarToken({dni: decoded.elector_dni});
         return res.json({
           ok :true,
           content: nuevaToken
