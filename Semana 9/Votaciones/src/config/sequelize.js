@@ -20,7 +20,7 @@ const VotoCongresal = voto_congresal_model(conexion);
 const Congresista = congresita_model(conexion);
 // crear las relaciones
 // Relacion de uno a uno pero aun así se debe de crear la FK
-Elector.hasOne(Voto, { foreignKey: { name: "elector_dni", allowNull: false } });
+Elector.hasOne(Voto, { foreignKey: { name: "elector_dni", allowNull: false, unique:true } });
 Voto.belongsTo(Elector, { foreignKey: "elector_dni" });
 // 
 // podemos controlar la forma en la cual va a accionar la llave foranea cuando su padre sea eliminado, TODAS ESTAS FORMAS VALEN PARA CUALQUIER TIPO DE RELACION (ONE-TO-ONE | ONE-TO-MANY)

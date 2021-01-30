@@ -33,18 +33,18 @@ const renovarToken = async (req, res) => {
   if (req.headers.authorization) {
     const token = req.headers.authorization.split(" ")[1];
     const respuesta = verificarToken(token);
-    console.log(respuesta);
+    // console.log(respuesta);
     if (typeof respuesta === "object") {
       return res.json({
         ok: true,
-        message: "todo bien",
+        message: "la token aun es valida y no necesita renovarse",
       });
     } else if(typeof respuesta === "string"){
       if(respuesta === "jwt expired"){
         // mi token era valida pero ya expiró!
         // el metodo decode sirve para decodificar la token si pasamos su parametro {complete: true} nos dará las tres partes legibles excepto por la contraseña que seguira estando encriptada.
         const decoded = jwt.decode(token);
-        console.log(decoded.elector_dni);
+        // console.log(decoded.elector_dni);
         const nuevaToken = generarToken({dni: decoded.elector_dni});
         return res.json({
           ok :true,
