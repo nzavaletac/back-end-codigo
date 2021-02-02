@@ -1,0 +1,404 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "Votaciones 2021",
+    "description": "Api usando validacion de dni y restauracion de password por correo",
+    "contact": {}
+  },
+  "host": "127.0.0.1:5000",
+  "basePath": "/",
+  "securityDefinitions": {},
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/partido": {
+      "post": {
+        "description": "Endpoint para agregar un partido, solamente un administrador va a poder realizar esta accion.",
+        "summary": "/partido",
+        "tags": [
+          "Partido"
+        ],
+        "operationId": "/partido",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
+          },
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/~1partidorequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        }
+      }
+    },
+    "/registrar": {
+      "post": {
+        "description": "Endpoint para agregar un nuevo elector",
+        "summary": "/registrar",
+        "tags": [
+          "Elector"
+        ],
+        "operationId": "/registrar",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
+          },
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/~1registrarrequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        }
+      }
+    },
+    "/iniciarSesion": {
+      "post": {
+        "description": "Ruta para iniciar sesion",
+        "summary": "/iniciarSesion",
+        "tags": [
+          "Elector"
+        ],
+        "operationId": "/iniciarSesion",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
+          },
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/~1iniciarSesionRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        }
+      }
+    },
+    "/renovarToken": {
+      "post": {
+        "description": "Endpoint para renovar la token",
+        "summary": "/renovarToken",
+        "tags": [
+          "Elector"
+        ],
+        "operationId": "/renovarToken",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        }
+      }
+    },
+    "/voto": {
+      "post": {
+        "description": "Endpoint para registrar un nuevo voto",
+        "summary": "/voto",
+        "tags": [
+          "Voto"
+        ],
+        "operationId": "/voto",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
+          },
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/~1votorequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        }
+      }
+    },
+    "/presidenciales": {
+      "get": {
+        "description": "Endpoint para devolver el resultado de las elecciones presidenciales",
+        "summary": "/presidenciales",
+        "tags": [
+          "Administrador"
+        ],
+        "operationId": "/presidenciales",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        }
+      }
+    },
+    "/congresales": {
+      "get": {
+        "description": "Endpoint que retorna el resultado de las votaciones congresales",
+        "summary": "/congresales",
+        "tags": [
+          "Administrador"
+        ],
+        "operationId": "/congresales",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "/partidorequest": {
+      "title": "/partidorequest",
+      "example": {
+        "partido_img_partido": "https://picsum.photos/200",
+        "partido_img_candidato": "https://picsum.photos/200",
+        "partido_nombre": "Las tres cruces"
+      },
+      "type": "object",
+      "properties": {
+        "partido_img_partido": {
+          "type": "string"
+        },
+        "partido_img_candidato": {
+          "type": "string"
+        },
+        "partido_nombre": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "partido_img_partido",
+        "partido_img_candidato",
+        "partido_nombre"
+      ]
+    },
+    "/registrarrequest": {
+      "title": "/registrarrequest",
+      "example": {
+        "elector_dni": 73500746,
+        "elector_email": "ederiveroman@gmail.com",
+        "elector_tipo": 2
+      },
+      "type": "object",
+      "properties": {
+        "elector_dni": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "elector_email": {
+          "type": "string"
+        },
+        "elector_tipo": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "required": [
+        "elector_dni",
+        "elector_email",
+        "elector_tipo"
+      ]
+    },
+    "/iniciarSesionRequest": {
+      "title": "/iniciarSesionRequest",
+      "example": {
+        "email": "ederiveroman@gmail.com",
+        "dni": "73500746"
+      },
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "dni": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "email",
+        "dni"
+      ]
+    },
+    "/votorequest": {
+      "title": "/votorequest",
+      "example": {
+        "voto_presidencial": 1,
+        "voto_congresal": {
+          "partido": 2,
+          "primer_congresista": 7,
+          "segundo_congresista": 10
+        }
+      },
+      "type": "object",
+      "properties": {
+        "voto_presidencial": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "voto_congresal": {
+          "$ref": "#/definitions/VotoCongresal"
+        }
+      },
+      "required": [
+        "voto_presidencial",
+        "voto_congresal"
+      ]
+    },
+    "VotoCongresal": {
+      "title": "VotoCongresal",
+      "example": {
+        "partido": 2,
+        "primer_congresista": 7,
+        "segundo_congresista": 10
+      },
+      "type": "object",
+      "properties": {
+        "partido": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "primer_congresista": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "segundo_congresista": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "required": [
+        "partido",
+        "primer_congresista",
+        "segundo_congresista"
+      ]
+    }
+  },
+  "tags": [
+    {
+      "name": "Partido",
+      "description": "Rutas del manejo de los partidos politicos"
+    },
+    {
+      "name": "Elector"
+    },
+    {
+      "name": "Voto"
+    },
+    {
+      "name": "Administrador"
+    }
+  ]
+}
