@@ -41,11 +41,11 @@ VotoCongresal.belongsTo(Elector, { foreignKey: "elector_dni" });
 Partido.hasMany(Voto, {as:'votos', foreignKey:{name:'partido_id', allowNull:false}});
 Voto.belongsTo(Partido, {as:'partidos', foreignKey:'partido_id'});
 
-Partido.hasMany(Congresista, {foreignKey:{name:'partido_id', allowNull:false}});
-Congresista.belongsTo(Partido, {foreignKey:'partido_id'});
+Partido.hasMany(Congresista, {as:'congresistas', foreignKey:{name:'partido_id', allowNull:false}});
+Congresista.belongsTo(Partido, {as:'partidos', foreignKey:'partido_id'});
 
-Congresista.hasMany(VotoCongresal, {foreignKey:{name:'congresista_id', allowNull:false}});
-VotoCongresal.belongsTo(Congresista, {foreignKey:'congresista_id'});
+Congresista.hasMany(VotoCongresal, {as: 'votosCongresales', foreignKey:{name:'congresista_id', allowNull:false}});
+VotoCongresal.belongsTo(Congresista, {as: 'congresistas', foreignKey:'congresista_id'});
 
 module.exports = {
   conexion,

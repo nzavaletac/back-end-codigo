@@ -1,4 +1,9 @@
-const { Voto, VotoCongresal, Partido } = require("../config/sequelize");
+const {
+  Voto,
+  VotoCongresal,
+  Partido,
+  Congresista,
+} = require("../config/sequelize");
 const { Sequelize } = require("sequelize");
 
 const resultadosPresidenciales = async (req, res) => {
@@ -37,7 +42,7 @@ const resultadosPresidenciales = async (req, res) => {
   });
 };
 
-const resultadosCongresalesPaginados = (req, res) => {
+const resultadosCongresalesPaginados = async (req, res) => {
   // Devolver todos los resultados (count) de los congresistas en el cual, además, se incluya el nombre del congresista y tambien su nombre del partido
   /**
    * {
@@ -62,6 +67,30 @@ const resultadosCongresalesPaginados = (req, res) => {
    *  }
    * }
    */
+  const votos = await VotoCongresal.findAll({
+    attributes: [
+      [
+        Sequelize.fn("COUNT", Sequelize.col("congresistas.congresista_id")),
+        "numero_votos",
+      ],
+    ],
+    group: ["congresistas.congresista_id"],
+    include: {
+        attributes: ['congresista_numero','congresista_nombre'],
+        model : Congresista,
+        as: "congresistas",
+        include:{
+            model: Partido,
+            as: 'partidos',
+            attributes:['partido_nombre']
+        }
+    }
+  });
+
+  return res.json({
+    ok: true,
+    content: votos,
+  });
 };
 
 module.exports = {
