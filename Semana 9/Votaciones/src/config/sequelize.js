@@ -38,8 +38,8 @@ Voto.belongsTo(Elector, { foreignKey: "elector_dni" });
 Elector.hasMany(VotoCongresal, { foreignKey: { name: "elector_dni", onDelete: 'CASCADE'} });
 VotoCongresal.belongsTo(Elector, { foreignKey: "elector_dni" });
 
-Partido.hasMany(Voto, {foreignKey:{name:'partido_id', allowNull:false}});
-Voto.belongsTo(Partido, {foreignKey:'partido_id'});
+Partido.hasMany(Voto, {as:'votos', foreignKey:{name:'partido_id', allowNull:false}});
+Voto.belongsTo(Partido, {as:'partidos', foreignKey:'partido_id'});
 
 Partido.hasMany(Congresista, {foreignKey:{name:'partido_id', allowNull:false}});
 Congresista.belongsTo(Partido, {foreignKey:'partido_id'});
