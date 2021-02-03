@@ -5,6 +5,8 @@ const partido_router = require("../routes/partido");
 const elector_router = require("../routes/elector");
 const voto_router = require("../routes/voto");
 const administrador_router = require("../routes/administrador");
+const swaggerUi = require("swagger-ui-express"); // npm i swagger-ui-express
+const documentacion = require("../../docs/votaciones_documentacion.json");
 const exphbs = require("express-handlebars"); // npm i express-handlebars
 module.exports = class Server {
   constructor() {
@@ -43,6 +45,7 @@ module.exports = class Server {
         message: "Bienvenido a mi API de elecciones 😂",
       });
     });
+    this.app.use("/apidocs", swaggerUi.serve, swaggerUi.setup(documentacion));
     this.app.use("", partido_router, elector_router, voto_router, administrador_router);
   }
   start() {
