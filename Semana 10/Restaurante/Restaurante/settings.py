@@ -37,7 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'Facturacion',
+    'Almacen'
 ]
 
 MIDDLEWARE = [
@@ -123,3 +125,8 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# CONFIGURACIONES ADICIONALES
+
+# Para cambiar el USER MODEL a uno generado manualmente
+AUTH_USER_MODEL='Facturacion.UsuarioModel'
