@@ -1,7 +1,9 @@
 from rest_framework import generics, status
 from .serializers import InventarioModel, InventarioSerializer
 from rest_framework.response import Response
-
+# https://www.django-rest-framework.org/api-guide/exceptions/
+from rest_framework.exceptions import ParseError
+from django.shortcuts import get_object_or_404
 class InventariosView(generics.ListCreateAPIView):
     # algunos atributos de la clase generica son:
     queryset = InventarioModel.objects.all() # SELECT * FROM t_inventario
@@ -31,18 +33,29 @@ class InventariosView(generics.ListCreateAPIView):
             "content": resultado.data
         })
 
-
 class InventarioView(generics.RetrieveUpdateDestroyAPIView):
     # la clase RetrieveUpdateDestroyAPIView me permite usar los metodos GET, PUT, DELETE
     queryset = InventarioModel.objects.all()
     serializer_class = InventarioSerializer
     def get(self, request, inventario_id):
         # SELECT * FROM t_inventario WHERE inventario_id=var
-        inventario = self.queryset.filter(inventarioId=inventario_id).first()
-        # Otra forma de hacer SELECT pero mas "delicada"
-        print(self.queryset.get(inventarioId=inventario_id))
         # al usar el first ya no retornara una lista sino que retornara un objeto, es la unica clausula de filtros que retorna un objeto
-        inventarioSerializado = self.serializer_class(instance=inventario)
+        inventario = self.queryset.filter(inventarioId=inventario_id).first()
+        # SEGUNDA FORMA
+        # Otra forma de hacer SELECT pero mas "delicada"
+        # al momento de usar get tenemos que estar seguros que no nos va a pasar un campo incorrecto porque sino crasheará el programa
+        # try:
+        #     print(self.queryset.get(inventarioId=inventario_id))
+        # except:
+        #     raise ParseError("Error!")
+        # TERCERA FORMA
+        # Se usa el metodo del propio DJANGO
+        # si encuentra un objeto con ese filtro lo retornará, sino automaticamente retornara al cliente un estado 404
+        # lo que retorna es un objecto NO SERIALIZADO
+        inventarioObject = get_object_or_404(InventarioModel,pk=inventario_id)
+        print(inventarioObject)
+        
+        inventarioSerializado = self.serializer_class(instance=inventarioObject)
         return Response({
             "ok": True,
             "content": inventarioSerializado.data
