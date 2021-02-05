@@ -41,6 +41,7 @@ class InventarioView(generics.RetrieveUpdateDestroyAPIView):
         # SELECT * FROM t_inventario WHERE inventario_id=var
         # al usar el first ya no retornara una lista sino que retornara un objeto, es la unica clausula de filtros que retorna un objeto
         inventario = self.queryset.filter(inventarioId=inventario_id).first()
+
         # SEGUNDA FORMA
         # Otra forma de hacer SELECT pero mas "delicada"
         # al momento de usar get tenemos que estar seguros que no nos va a pasar un campo incorrecto porque sino crasheará el programa
@@ -48,20 +49,44 @@ class InventarioView(generics.RetrieveUpdateDestroyAPIView):
         #     print(self.queryset.get(inventarioId=inventario_id))
         # except:
         #     raise ParseError("Error!")
+
         # TERCERA FORMA
         # Se usa el metodo del propio DJANGO
         # si encuentra un objeto con ese filtro lo retornará, sino automaticamente retornara al cliente un estado 404
         # lo que retorna es un objecto NO SERIALIZADO
-        inventarioObject = get_object_or_404(InventarioModel,pk=inventario_id)
-        print(inventarioObject)
+        # inventarioObject = get_object_or_404(InventarioModel,pk=inventario_id)
+        # print(inventarioObject)
         
-        inventarioSerializado = self.serializer_class(instance=inventarioObject)
+        inventarioSerializado = self.serializer_class(instance=inventario)
         return Response({
             "ok": True,
             "content": inventarioSerializado.data
         })
 
     def put(self, request, inventario_id):
-        pass
+        # antes de hacer la actualizacion validar que el inventario exista
+        inventarioEncontrado =  get_object_or_404(InventarioModel, pk = inventario_id)
+        # inventarioEncontrado = self.queryset.filter(inventarioId = inventario_id).first()
+        inventarioUpdate = self.serializer_class(data = request.data)
+        inventarioUpdate.is_valid(raise_exception=True)
+        # luego que llamamos al metodo is_valid este, a parte de devolver si es valido o no (bool) nos creara un diccionario con la data correctamente validada siendo sus llames los nombre de las columnas y sus valores la data validada
+        # para usar el validated_data tenemos que llamar previamente al metodo is_valid() OBLIGATORIAMENTE
+        resultado = inventarioUpdate.update(inventarioEncontrado, inventarioUpdate.validated_data)
+        print(resultado)
+        serializador = self.serializer_class(resultado)
+        return Response({
+            "ok":True,
+            "content":serializador.data,
+            "message":"Se actualizo el inventario exitosamente"
+        }, status=status.HTTP_201_CREATED)
+
     def delete(self, request, inventario_id):
-        pass
+        inventario = get_object_or_404(InventarioModel, pk=inventario_id)
+        # el metodo delete es propio del ORM de django en el cual su clausula SQL seria:
+        # DELETE FROM t_inventario where inventario_id = pk
+        inventario.delete()
+        return Response({
+            "ok": True,
+            "message":"Se elimino exitosamente el platillo",
+            "content": None
+        })
