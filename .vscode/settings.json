@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "c:\\Users\\ederi\\virtualback4\\Scripts\\python.exe",
+    "python.pythonPath": "c:\\Users\\ederi\\venvVirtualBack4\\Scripts\\python.exe",
     "python.linting.pylintArgs": [
         "--load-plugins=pylint_django, pylint_celery" // para evitar que me de el problema en el objeto de los modelos de django
     ]

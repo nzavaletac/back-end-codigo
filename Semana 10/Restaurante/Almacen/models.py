@@ -10,11 +10,11 @@ class InventarioModel(models.Model):
     inventarioPlato = models.CharField(
         max_length=40,
         db_column="inventario_plato",
-        null=True,
+        null=False,
         verbose_name="Nombre del Plato"
     )
     inventarioCantidad = models.IntegerField(
-        null=True,
+        null=False,
         db_column="inventario_cantidad",
         verbose_name="Cantidad del plato"
     )
