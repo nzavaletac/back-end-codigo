@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -130,3 +131,20 @@ STATIC_URL = '/static/'
 
 # Para cambiar el USER MODEL a uno generado manualmente
 AUTH_USER_MODEL='Facturacion.UsuarioModel'
+
+# Variable que se usa para configurar la libreria Django Rest Framework
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication'
+    ]
+}
+
+from datetime import timedelta
+# Variable que se usa para la configuracion de mi JWT
+SIMPLE_JWT = {
+    'USER_ID_FIELD': 'usuarioId',
+    'ACCESS_TOKEN_LIFETIME' : timedelta(hours=1), # Sirve para modificar el tiempo de expiracion de mi JWT, su valor x defecto es 5min
+    'REFRESH_TOKEN_LIFETIME': timedelta(hours=8), # Sirve para indicar cuanto va a durar la token que se refresca (la nueva token), su valor x defecto es un dia
+    'ALGORITHM': 'HS512', # sirve para indicar que algoritmo se usará para la encriptacion su valor por defecto es HS256 y sus valores son: HS256, HS384 HS512
+    # 'SIGNING_KEY': 'mimamamemima'
+}
