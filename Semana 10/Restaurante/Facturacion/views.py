@@ -1,9 +1,9 @@
 from rest_framework import generics, status
 from .models import MesaModel
-from .serializers import RegistroSerializer, MesaSerializer, CustomPayloadSerializer
+from .serializers import RegistroSerializer, MesaSerializer, CustomPayloadSerializer, InicioConsumidorSerializer
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated , IsAuthenticatedOrReadOnly
-from .permissions import SoloCajeros
+from .permissions import SoloCajeros, SoloMeseros
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.decorators import api_view, permission_classes
 # AllowAny Permite que todos los controladores no pidan autenticacion
@@ -69,3 +69,34 @@ def mesas_disponibles(request):
         "content":resultadoSerializado.data,
         "message": None
     })
+
+
+class ComandasView(generics.ListCreateAPIView):
+    serializer_class = InicioConsumidorSerializer
+    def post(self, request):
+        resultado = InicioConsumidorSerializer(data= request.data)
+        resultado.is_valid(raise_exception=True)
+        resultado.save()
+        return Response({
+            "ok": True,
+            "message":"Se creo la comanda exitosamente",
+            "content":None
+        })
+    def get(self, request):
+        pass
+
+
+
+class CrearPedidoView(generics.CreateAPIView):
+    permission_classes=[IsAuthenticated, SoloMeseros]
+    def post(self, request):
+        pass
+
+
+
+@api_view(['POST'])
+# crear un permission para que solamente un mesero pueda registrar un pedido
+# mesero tipo = 2
+# @permission_classes([IsAuthenticated, SoloMeseros])
+def crear_pedido(request):
+    return Response('NO SIRVE!')

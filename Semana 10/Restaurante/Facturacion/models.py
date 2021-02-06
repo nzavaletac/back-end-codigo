@@ -118,6 +118,13 @@ class CabeceraComandaModel(models.Model):
         max_length=50,
         verbose_name="Nombre del cliente"
     )
+    cabeceraEstado = models.CharField(
+        db_column="cabecera_estado",
+        null=False,
+        max_length=50,
+        verbose_name="Estado del pedido",
+        default="ABIERTO"
+    )
     # Luego creamos las relaciones
     # CASCADE
     # PROTECT
