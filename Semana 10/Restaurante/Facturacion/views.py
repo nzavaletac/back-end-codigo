@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated , IsAuthenticatedOrReadOnly
 from .permissions import SoloCajeros
 from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework.decorators import api_view, permission_classes
 # AllowAny Permite que todos los controladores no pidan autenticacion
 # IsAuthenticated No va a permitir que pueda proceder sin que no se haya dado una token
 # IsAuthenticatedOrReadOnly solamente va a permitir acceder a metodos GET sin la necesidad de una token
@@ -55,3 +56,16 @@ class MesasView(generics.ListCreateAPIView):
             "content": nuevaMesa.data,
             "message": "se creo la mesa exitosamente"
         }, status=status.HTTP_201_CREATED)
+
+# controlador en el cual me muestre las mesas disponibles
+# se usa mas un apiview cuando nosotros tengamos que solamente usar un metodo (GET, POST, PUT) y asi nos evitaremos de crear una clase con todos sus atributos
+@api_view(['GET'])
+@permission_classes([IsAuthenticated, SoloCajeros])
+def mesas_disponibles(request):
+    mesas = MesaModel.objects.filter(mesaEstado=True).all()
+    resultadoSerializado = MesaSerializer(instance= mesas, many=True)
+    return Response({
+        "ok": True,
+        "content":resultadoSerializado.data,
+        "message": None
+    })
