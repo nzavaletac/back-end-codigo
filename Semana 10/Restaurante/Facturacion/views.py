@@ -1,6 +1,6 @@
 from rest_framework import generics, status
-from .models import MesaModel
-from .serializers import RegistroSerializer, MesaSerializer, CustomPayloadSerializer, InicioConsumidorSerializer
+from .models import CabeceraComandaModel, MesaModel
+from .serializers import ComandaDetalleSerializer, DevolverNotaSerializer, RegistroSerializer, MesaSerializer, CustomPayloadSerializer, InicioConsumidorSerializer
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated , IsAuthenticatedOrReadOnly
 from .permissions import SoloCajeros, SoloMeseros
@@ -70,7 +70,6 @@ def mesas_disponibles(request):
         "message": None
     })
 
-
 class ComandasView(generics.ListCreateAPIView):
     serializer_class = InicioConsumidorSerializer
     def post(self, request):
@@ -85,12 +84,33 @@ class ComandasView(generics.ListCreateAPIView):
     def get(self, request):
         pass
 
-
-
 class CrearPedidoView(generics.CreateAPIView):
     permission_classes=[IsAuthenticated, SoloMeseros]
+    serializer_class = ComandaDetalleSerializer
     def post(self, request):
-        pass
+        resultado = self.serializer_class(data=request.data)
+        resultado.is_valid(raise_exception=True)
+        resultado.save()
+        return Response({
+            "ok":True,
+            "content":resultado.data
+        })
+
+class GenerarNotaPedidoView(generics.ListAPIView):
+    serializer_class = DevolverNotaSerializer
+    queryset = CabeceraComandaModel.objects.all()
+    def get_queryset(self, id):
+        return self.queryset.filter(cabeceraId=id).first()
+
+    def get(self, request, id_comanda):
+        resultado = self.serializer_class(instance=self.get_queryset(id_comanda))
+        return Response({
+            "ok": True,
+            "content": resultado.data
+        })
+
+
+
 
 
 

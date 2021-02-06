@@ -18,6 +18,13 @@ class InventarioModel(models.Model):
         db_column="inventario_cantidad",
         verbose_name="Cantidad del plato"
     )
+    inventarioPrecio = models.DecimalField(
+        max_digits= 5,
+        decimal_places= 2,
+        null=False,
+        db_column="inventario_precio",
+        verbose_name="Precio del plato"
+    )
 
     def __str__(self):
         return self.inventarioPlato

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import MesaModel, UsuarioModel, CabeceraComandaModel
+from .models import DetalleComandaModel, MesaModel, UsuarioModel, CabeceraComandaModel
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.utils import timezone
 
@@ -71,3 +71,32 @@ class InicioConsumidorSerializer(serializers.Serializer):
         nuevaCabecera = CabeceraComandaModel(cabeceraFecha = timezone.now(), cabeceraTotal = 0.0, cabeceraCliente = "", mesa = mesa, usuario = mesero)
         nuevaCabecera.save()
         return nuevaCabecera
+
+class ComandaDetalleSerializer(serializers.ModelSerializer):
+    def save(self):
+        # a parte de registrar la comanda hacer el descuento del inventario
+        cantidad = self.validated_data.get('detalleCantidad')
+        subtotal = self.validated_data.get('detalleSubtotal')
+        cabecera = self.validated_data.get('cabecera')
+        inventario = self.validated_data.get('inventario')
+        detalleComanda = DetalleComandaModel(detalleCantidad = cantidad, detalleSubtotal=subtotal, cabecera=cabecera, inventario=inventario)
+        detalleComanda.save()
+        # cuando usamos un modelSerializer todas las fk internamente el serializador hace la busqueda para validar
+        inventario.inventarioCantidad = inventario.inventarioCantidad - cantidad
+        inventario.save()
+        return detalleComanda 
+    class Meta:
+        model = DetalleComandaModel
+        fields = '__all__'
+
+class MeseroSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UsuarioModel
+        fields = ['usuarioNombre', 'usuarioApellido']
+
+class DevolverNotaSerializer(serializers.ModelSerializer):
+    detalleComanda = ComandaDetalleSerializer(source="cabeceraDetalles", many=True)
+    mesero = MeseroSerializer(source="usuario")
+    class Meta:
+        model = CabeceraComandaModel
+        fields = '__all__'
