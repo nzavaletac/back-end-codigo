@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import DetalleComandaModel, MesaModel, UsuarioModel, CabeceraComandaModel
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.utils import timezone
+from Almacen.serializers import PlatoSerializer 
 
 class RegistroSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -84,6 +85,11 @@ class ComandaDetalleSerializer(serializers.ModelSerializer):
         # cuando usamos un modelSerializer todas las fk internamente el serializador hace la busqueda para validar
         inventario.inventarioCantidad = inventario.inventarioCantidad - cantidad
         inventario.save()
+        totalDetalle = subtotal * cantidad
+
+        cabecera.cabeceraTotal = cabecera.cabeceraTotal + totalDetalle
+        cabecera.save()
+
         return detalleComanda 
     class Meta:
         model = DetalleComandaModel
@@ -94,9 +100,17 @@ class MeseroSerializer(serializers.ModelSerializer):
         model = UsuarioModel
         fields = ['usuarioNombre', 'usuarioApellido']
 
+class DevolverNotaDetalleSerializer(serializers.ModelSerializer):
+    plato = PlatoSerializer(source='inventario')
+    class Meta:
+        model = DetalleComandaModel
+        # fields = '__all__'
+        exclude = ['inventario', 'cabecera', 'detalleId']
+
 class DevolverNotaSerializer(serializers.ModelSerializer):
-    detalleComanda = ComandaDetalleSerializer(source="cabeceraDetalles", many=True)
+    detalleComanda = DevolverNotaDetalleSerializer(source="cabeceraDetalles", many=True)
     mesero = MeseroSerializer(source="usuario")
     class Meta:
         model = CabeceraComandaModel
-        fields = '__all__'
+        # fields = '__all__'
+        exclude = ['usuario']

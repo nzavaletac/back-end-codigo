@@ -100,17 +100,27 @@ class GenerarNotaPedidoView(generics.ListAPIView):
     serializer_class = DevolverNotaSerializer
     queryset = CabeceraComandaModel.objects.all()
     def get_queryset(self, id):
-        return self.queryset.filter(cabeceraId=id).first()
+        cabecera = self.queryset.filter(cabeceraId=id).first()
+        # cabecera.cabeceraEstado = 'CERRADO'
+        # cabecera.save()
+        return cabecera
 
     def get(self, request, id_comanda):
-        resultado = self.serializer_class(instance=self.get_queryset(id_comanda))
+        # Al momento de hacer la peticion de la comanda se tiene que cambiar su estado a CERRADO
+        cabecera = self.get_queryset(id_comanda)
+        cabecera.cabeceraEstado = 'CERRADO'
+        cabecera.save()
+        # OJO: al momento de devolver la lista ya debe aparecer con el estado CERRADO
+        resultado = self.serializer_class(instance=cabecera)
+        # resultado = self.serializer_class(instance=self.get_queryset(id_comanda))
         return Response({
             "ok": True,
             "content": resultado.data
         })
 
 
-
+class GenerarComprobantePago(generics.ListCreateAPIView):
+    pass
 
 
 
