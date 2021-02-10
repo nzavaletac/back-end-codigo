@@ -57,7 +57,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='CompranteModel',
+            name='ComprobanteModel',
             fields=[
                 ('comprobanteId', models.AutoField(db_column='comprobante_id', primary_key=True, serialize=False, unique=True)),
                 ('comprobanteSerie', models.CharField(db_column='comprobante_serie', max_length=4, verbose_name='Serie del comprobante')),

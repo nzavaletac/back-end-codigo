@@ -152,7 +152,7 @@ class CabeceraComandaModel(models.Model):
         verbose_name = "Comanda"
         verbose_name_plural = "Comandas"
 
-class CompranteModel(models.Model):
+class ComprobanteModel(models.Model):
     comprobanteId = models.AutoField(
         primary_key=True,
         null=False,
@@ -164,7 +164,7 @@ class CompranteModel(models.Model):
         null=False,
         db_column="comprobante_serie",
         verbose_name="Serie del comprobante")
-        
+
     comprobanteNumero = models.IntegerField(
         db_column="comprobante_numero",
         verbose_name="Numero del comprobante",

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CompranteModel, DetalleComandaModel, MesaModel, UsuarioModel, CabeceraComandaModel
+from .models import ComprobanteModel, DetalleComandaModel, MesaModel, UsuarioModel, CabeceraComandaModel
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.utils import timezone
 from Almacen.serializers import PlatoSerializer
@@ -140,5 +140,5 @@ class GenerarComprobanteSerializer(serializers.Serializer):
 
 class ComprobanteSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CompranteModel
+        model = ComprobanteModel
         fields = '__all__'

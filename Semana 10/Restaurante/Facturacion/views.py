@@ -1,5 +1,5 @@
 from rest_framework import generics, status
-from .models import CabeceraComandaModel, CompranteModel, MesaModel
+from .models import CabeceraComandaModel, ComprobanteModel, MesaModel
 from .serializers import ComandaDetalleSerializer, ComprobanteSerializer, DevolverNotaSerializer, GenerarComprobanteSerializer, RegistroSerializer, MesaSerializer, CustomPayloadSerializer, InicioConsumidorSerializer
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
@@ -176,7 +176,7 @@ class GenerarComprobantePago(generics.ListCreateAPIView):
                 cdr = respuesta.get('enlace_del_cdr')
                 cabecera = CabeceraComandaModel.objects.get(
                     cabeceraId=id_comanda)
-                nuevoComprobante = CompranteModel(comprobanteSerie=serie,
+                nuevoComprobante = ComprobanteModel(comprobanteSerie=serie,
                                                   comprobanteNumero=numero,
                                                   comprobanteTipo=tipo,
                                                   comprobanteCliIdentificacion=cliente,

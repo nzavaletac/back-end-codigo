@@ -1,6 +1,6 @@
 import requests
 from datetime import datetime
-from .models import CabeceraComandaModel, CompranteModel
+from .models import CabeceraComandaModel, ComprobanteModel
 def emitirComprobante(  tipo_comprobante, 
                         cliente_tipo_documento, 
                         cliente_documento, 
@@ -82,10 +82,10 @@ def emitirComprobante(  tipo_comprobante,
     if tipo_comprobante == 1:
         serie = "FFF1"
         # SELECT TOP(1) * FROM T_COMPROBANTE WHERE COMPROBANTESERIE = SERIE ORDER BY COMPROBANTENUMERO DESC
-        ultimoComprobante = CompranteModel.objects.filter(comprobanteSerie=serie).order_by('-comprobanteNumero').first()
+        ultimoComprobante = ComprobanteModel.objects.filter(comprobanteSerie=serie).order_by('-comprobanteNumero').first()
     elif tipo_comprobante == 2:
         serie = "BBB1"
-        ultimoComprobante = CompranteModel.objects.filter(comprobanteSerie=serie).order_by('-comprobanteNumero').first()
+        ultimoComprobante = ComprobanteModel.objects.filter(comprobanteSerie=serie).order_by('-comprobanteNumero').first()
     # tipo_comprobante => 1: Factura, 2: Boleta, 3: Nota credito, 4: Nota debito
     numero = ultimoComprobante.comprobanteNumero + 1
     comprobante_body={
