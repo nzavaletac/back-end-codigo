@@ -1,6 +1,6 @@
 import requests
 from datetime import datetime
-from .models import CabeceraComandaModel
+from .models import CabeceraComandaModel, CompranteModel
 def emitirComprobante(  tipo_comprobante, 
                         cliente_tipo_documento, 
                         cliente_documento, 
@@ -43,7 +43,7 @@ def emitirComprobante(  tipo_comprobante,
     else:
         # en caso que me quiera mandar sin cliente_documento PERO el valor de venta sea mayor que 700 soles no va a ser posible realizar la operacion
         if total > 700:
-            return "No se puede realizar la operacion"
+            return {'errors':'Para un monto mayor a 700 es necesario una identificacion'}
         documento = "-"
         cliente_denominacion="VARIOS"
         cliente_documento="VARIOS"    
@@ -81,10 +81,13 @@ def emitirComprobante(  tipo_comprobante,
     serie = ""
     if tipo_comprobante == 1:
         serie = "FFF1"
+        # SELECT TOP(1) * FROM T_COMPROBANTE WHERE COMPROBANTESERIE = SERIE ORDER BY COMPROBANTENUMERO DESC
+        ultimoComprobante = CompranteModel.objects.filter(comprobanteSerie=serie).order_by('-comprobanteNumero').first()
     elif tipo_comprobante == 2:
         serie = "BBB1"
+        ultimoComprobante = CompranteModel.objects.filter(comprobanteSerie=serie).order_by('-comprobanteNumero').first()
     # tipo_comprobante => 1: Factura, 2: Boleta, 3: Nota credito, 4: Nota debito
-    numero = 1
+    numero = ultimoComprobante.comprobanteNumero + 1
     comprobante_body={
         "operacion": "generar_comprobante",
         "tipo_de_comprobante": tipo_comprobante,
@@ -110,14 +113,13 @@ def emitirComprobante(  tipo_comprobante,
         "formato_de_pdf": "A4",
         "items": items
     }
-    print(comprobante_body)
     url_nubefact = "https://api.nubefact.com/api/v1/db267c95-40d8-4757-9731-588481167020"
     headers_nubefact = {
         "Authorization": "3b643f32df9d40f089ff1685774d41206f8b633d814646969d29da362afa527b",
         "Content-Type": "application/json"
     }
     respuesta_nubefact = requests.post(url=url_nubefact, json=comprobante_body, headers= headers_nubefact)
-    print(respuesta_nubefact.json())
+    return respuesta_nubefact.json()
 
 def buscarComprobante():
     pass
