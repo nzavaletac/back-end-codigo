@@ -12,30 +12,41 @@ def emitirComprobante(  tipo_comprobante,
     # moneda => 1: SOLES , 2: DOLARES, 3: EUROS
     # formato_de_pdf => A4, A5, TICKET
     # buscar el cliente segun su documento
-    base_url_apiperu = "https://apiperu.dev/api/"
     cliente_denominacion = ""
-    if cliente_tipo_documento == "RUC":
-        base_url_apiperu = base_url_apiperu+"ruc/{}".format(cliente_documento)
-    elif cliente_documento == "DNI":
-        base_url_apiperu = base_url_apiperu+"dni/{}".format(cliente_documento)
-    
-    headers = {
-        "Authorization": "Bearer 6287da8da77342f7e4aab59b670dbe153f0e803c2553e7a7dcbcc7d2510ba793",
-        "Content-Type": "application/json"
-    }
-    respuestaApiPeru = requests.get(url=base_url_apiperu, headers=headers)
-    if cliente_documento == "RUC":
-        cliente_denominacion = respuestaApiPeru.json()['data']['nombre_o_razon_social']
-    elif cliente_documento == "DNI":
-        cliente_denominacion = respuestaApiPeru.json()['data']['nombre_completo']
-    print(cliente_denominacion)
-    print(respuestaApiPeru.json()['data']['nombre_o_razon_social'])
+    documento = 0
     comanda = CabeceraComandaModel.objects.get(cabeceraId = cabecera_id)
     # el total de la comanda ya es un precio que incluye igv
     # el monto total gravada es el monto sin el igv
     total = float(comanda.cabeceraTotal)
-    total_gravada = total * 0.82
-    total_igv = total * 0.18
+    total_gravada = total / 1.18
+    total_igv = total - total_gravada
+
+    if len(cliente_documento) > 0:
+        base_url_apiperu = "https://apiperu.dev/api/"
+        if cliente_tipo_documento == "RUC":
+            base_url_apiperu = base_url_apiperu+"ruc/{}".format(cliente_documento)
+        elif cliente_documento == "DNI":
+            base_url_apiperu = base_url_apiperu+"dni/{}".format(cliente_documento)
+
+        headers = {
+            "Authorization": "Bearer 6287da8da77342f7e4aab59b670dbe153f0e803c2553e7a7dcbcc7d2510ba793",
+            "Content-Type": "application/json"
+        }
+        respuestaApiPeru = requests.get(url=base_url_apiperu, headers=headers)
+    
+        if cliente_tipo_documento == "RUC":
+            documento = 6
+            cliente_denominacion = respuestaApiPeru.json()['data']['nombre_o_razon_social']
+        elif cliente_tipo_documento == "DNI":
+            documento = 1
+            cliente_denominacion = respuestaApiPeru.json()['data']['nombre_completo']
+    else:
+        # en caso que me quiera mandar sin cliente_documento PERO el valor de venta sea mayor que 700 soles no va a ser posible realizar la operacion
+        if total > 700:
+            return "No se puede realizar la operacion"
+        documento = "-"
+        cliente_denominacion="VARIOS"
+        cliente_documento="VARIOS"    
 
     # items
     # codigo => codigo interno que manejamos nosotros
@@ -49,7 +60,7 @@ def emitirComprobante(  tipo_comprobante,
     items = []
     for detalle in comanda.cabeceraDetalles.all():
         precio_unitario = float(detalle.inventario.inventarioPrecio)
-        valor_unitario = precio_unitario * 0.82
+        valor_unitario = precio_unitario / 1.18
         cantidad = detalle.detalleCantidad
         items.append({
             "unidad_de_medida":"NIU",
@@ -80,12 +91,14 @@ def emitirComprobante(  tipo_comprobante,
         "serie": serie,
         "numero": numero,
         "sunat_transaction": 1,
-        "cliente_tipo_documento": 6,
+        "cliente_tipo_de_documento": documento,
+        "cliente_numero_de_documento": cliente_documento,
         "cliente_denominacion" : cliente_denominacion,
         "cliente_direccion": "",
         "cliente_email": cliente_email,
         "fecha_de_emision": datetime.now().strftime("%d-%m-%Y"),
         "moneda": 1,
+        "porcentaje_de_igv": 18.00,
         "total_gravada":total_gravada,
         "total_igv": total_igv,
         "total": total,

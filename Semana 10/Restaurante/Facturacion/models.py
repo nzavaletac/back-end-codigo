@@ -164,6 +164,7 @@ class CompranteModel(models.Model):
         null=False,
         db_column="comprobante_serie",
         verbose_name="Serie del comprobante")
+        
     comprobanteNumero = models.IntegerField(
         db_column="comprobante_numero",
         verbose_name="Numero del comprobante",
