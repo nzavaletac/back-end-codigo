@@ -79,6 +79,7 @@ def emitirComprobante(  tipo_comprobante,
     # Las facturas y notas asociadas empiezan con F
     # Las boletas y notas asociadas empiezan con B
     serie = ""
+    ultimoComprobante = None
     if tipo_comprobante == 1:
         serie = "FFF1"
         # SELECT TOP(1) * FROM T_COMPROBANTE WHERE COMPROBANTESERIE = SERIE ORDER BY COMPROBANTENUMERO DESC
@@ -87,7 +88,10 @@ def emitirComprobante(  tipo_comprobante,
         serie = "BBB1"
         ultimoComprobante = ComprobanteModel.objects.filter(comprobanteSerie=serie).order_by('-comprobanteNumero').first()
     # tipo_comprobante => 1: Factura, 2: Boleta, 3: Nota credito, 4: Nota debito
-    numero = ultimoComprobante.comprobanteNumero + 1
+    if ultimoComprobante is None:
+        numero = 1
+    else:
+        numero = ultimoComprobante.comprobanteNumero + 1
     comprobante_body={
         "operacion": "generar_comprobante",
         "tipo_de_comprobante": tipo_comprobante,

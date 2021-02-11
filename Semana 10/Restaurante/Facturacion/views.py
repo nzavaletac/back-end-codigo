@@ -154,6 +154,16 @@ class GenerarComprobantePago(generics.ListCreateAPIView):
                 'cliente_documento')
             cliente_email = resultado.validated_data.get('cliente_email')
             observaciones = resultado.validated_data.get('observaciones')
+            # hacer una consulta en la tabla comprobante para ver si ya hay un comprobante con esa cabecera (id_comanda)
+            verificacion = ComprobanteModel.objects.filter(cabecera=id_comanda).first()
+            if verificacion:
+                comprobante = ComprobanteSerializer(instance=verificacion)
+                return Response({
+                    "ok": False,
+                    "content": comprobante.data,
+                    "message": "Ya existe un comprobante para esa comanda"
+                }, status=status.HTTP_400_BAD_REQUEST)
+
             respuesta = emitirComprobante(tipo_comprobante,
                                           cliente_tipo_documento,
                                           cliente_documento,
