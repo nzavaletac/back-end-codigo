@@ -1,16 +1,16 @@
 from rest_framework import generics, status
 from .models import CabeceraComandaModel, ComprobanteModel, MesaModel
-from .serializers import ComandaDetalleSerializer, ComprobanteSerializer, DevolverNotaSerializer, GenerarComprobanteSerializer, RegistroSerializer, MesaSerializer, CustomPayloadSerializer, InicioConsumidorSerializer
+from .serializers import CierreDiaSerializer, ComandaDetalleSerializer, ComprobanteSerializer, DevolverNotaSerializer, GenerarComprobanteSerializer, RegistroSerializer, MesaSerializer, CustomPayloadSerializer, InicioConsumidorSerializer
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
 from .permissions import SoloCajeros, SoloMeseros
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.decorators import api_view, permission_classes
 from .generarComprobante import emitirComprobante
+from datetime import datetime
 # AllowAny Permite que todos los controladores no pidan autenticacion
 # IsAuthenticated No va a permitir que pueda proceder sin que no se haya dado una token
 # IsAuthenticatedOrReadOnly solamente va a permitir acceder a metodos GET sin la necesidad de una token
-
 
 class RegistroUsuarioView(generics.CreateAPIView):
     serializer_class = RegistroSerializer
@@ -25,11 +25,9 @@ class RegistroUsuarioView(generics.CreateAPIView):
             "content": nuevoUsuario.data
         }, status=201)
 
-
 class CustomPayloadView(TokenObtainPairView):
     permission_classes = [AllowAny, ]
     serializer_class = CustomPayloadSerializer
-
 
 class MesasView(generics.ListCreateAPIView):
     queryset = MesaModel.objects.all()
@@ -68,7 +66,6 @@ class MesasView(generics.ListCreateAPIView):
 # controlador en el cual me muestre las mesas disponibles
 # se usa mas un apiview cuando nosotros tengamos que solamente usar un metodo (GET, POST, PUT) y asi nos evitaremos de crear una clase con todos sus atributos
 
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, SoloCajeros])
 def mesas_disponibles(request):
@@ -79,7 +76,6 @@ def mesas_disponibles(request):
         "content": resultadoSerializado.data,
         "message": None
     })
-
 
 class ComandasView(generics.ListCreateAPIView):
     serializer_class = InicioConsumidorSerializer
@@ -216,3 +212,16 @@ class GenerarComprobantePago(generics.ListCreateAPIView):
 # @permission_classes([IsAuthenticated, SoloMeseros])
 def crear_pedido(request):
     return Response('NO SIRVE!')
+
+class CierreDiaView(generics.ListAPIView):
+    serializer_class = CierreDiaSerializer
+    def get(self, request):
+        fecha_actual = datetime.now()
+        # hacer un select de la cabecera pero filtrando solamente el dia de hoy
+        comandas = CabeceraComandaModel.objects.filter(cabeceraFecha= fecha_actual).all()
+        comandaSerializada = self.serializer_class(instance=comandas, many=True)
+        return Response({
+            "ok": True,
+            "content": comandaSerializada.data,
+            "message": None
+        })

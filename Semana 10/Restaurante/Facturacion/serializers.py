@@ -142,3 +142,15 @@ class ComprobanteSerializer(serializers.ModelSerializer):
     class Meta:
         model = ComprobanteModel
         fields = '__all__'
+
+
+# EJERCICIO
+class CierreDiaSerializer(serializers.ModelSerializer):
+    mesa = MesaSerializer()
+    mozo = MeseroSerializer(source='usuario')
+    detalle = DevolverNotaDetalleSerializer(source='cabeceraDetalles', many=True)
+    comprobante = ComprobanteSerializer(source='comanda_cabecera')
+    
+    class Meta:
+        model = CabeceraComandaModel
+        fields = '__all__'
