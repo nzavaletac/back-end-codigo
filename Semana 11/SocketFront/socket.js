@@ -6,8 +6,36 @@ const btnRegistrar = document.getElementById('btnIngresar');
 const login = document.getElementById('login');
 const chat = document.getElementById('chat');
 chat.style.display = "none";
-
+const estado = document.getElementById('estado');
+// para poder ver si el backend esta funcionando correctamente  llamo al metodo connect
+socket.on('connect', ()=>{
+    console.log(socket.id); // id del socket, es el mismo el front que el back
+    if (socket.connected){
+        estado.classList.remove('bg-danger');
+        estado.classList.add('bg-success');
+        estado.innerText = "ONLINE";
+    }
+    console.log(socket.connected);
+    console.log(socket.disconnected);
+});
+socket.on('disconnect',(reason)=>{
+    // me devuelve (al igual que en el back la razon por la cual se desconecto y las razones son las mismas)
+    // io server disconnect
+    // io client disconnect
+    // ping timeout
+    // transport close
+    // transport error
+    console.log(reason);
+    estado.classList.remove('bg-success');
+    estado.classList.add('bg-danger');
+    estado.innerText = "OFFLINE";
+    console.log('me desconecte!');
+})
 btnRegistrar.addEventListener('click', (e)=>{
+    // la forma de desconectarnos del sistema de socket manualmente
+    // socket.disconnect()
+    // la forma de conectarme manualmente al sistema de socket
+    // socket.open()
     e.preventDefault();
     // mandar el username al socket y que este lo reciba y lo imprima en pantalla
     socket.emit('registrar',username.value);

@@ -38,7 +38,9 @@ module.exports = class ServerSocket {
             
             cliente.on('mensaje-nuevo', (mensaje)=>{
                 console.log(mensaje);
-                cliente.emit('enviar-mensajes',['hola','hola amigo','vamos a montar bici?'])
+                mensajes.push(mensaje)
+                cliente.emit('enviar-mensajes',mensajes);
+                cliente.broadcast.emit('enviar-mensajes',mensajes)
             });
             cliente.on('disconnect',(reason)=>{
                 console.log(reason);
