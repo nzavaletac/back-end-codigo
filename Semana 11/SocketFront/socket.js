@@ -7,6 +7,7 @@ const login = document.getElementById('login');
 const chat = document.getElementById('chat');
 chat.style.display = "none";
 const estado = document.getElementById('estado');
+const listaMensajes = document.getElementById('listaMensajes');
 // para poder ver si el backend esta funcionando correctamente  llamo al metodo connect
 socket.on('connect', ()=>{
     console.log(socket.id); // id del socket, es el mismo el front que el back
@@ -47,7 +48,15 @@ btnEnviar.addEventListener('click',(e)=>{
     socket.emit('mensaje-nuevo', mensaje);
 })
 socket.on('enviar-mensajes', (mensajes)=>{
+    listaMensajes.innerHTML = '';
     console.log(mensajes);
+    for (const key in mensajes) {
+        const mensaje = document.createElement('li');
+        mensaje.className = 'list-group-item';
+        mensaje.innerText = `usuario dice: ${mensajes[key]}`;
+        listaMensajes.appendChild(mensaje);
+        input.value = '';
+    }
 })
 socket.on('lista-usuarios', (usuarios)=>{
     login.style.display ="none";

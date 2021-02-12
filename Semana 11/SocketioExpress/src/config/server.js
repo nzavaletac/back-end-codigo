@@ -38,7 +38,11 @@ module.exports = class ServerSocket {
             
             cliente.on('mensaje-nuevo', (mensaje)=>{
                 console.log(mensaje);
-                mensajes.push(mensaje)
+                const usuario = usuarios.filter(usuario => usuario.id === cliente.id)[0];
+                mensajes.push({
+                    cliente: usuario.username,
+                    mensaje: mensaje
+                })
                 cliente.emit('enviar-mensajes',mensajes);
                 cliente.broadcast.emit('enviar-mensajes',mensajes)
             });
