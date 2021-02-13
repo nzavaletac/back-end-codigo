@@ -1,4 +1,5 @@
 var express = require('express');
+var bodyParser = require('body-parser');
 var exphbs  = require('express-handlebars');
 var port = process.env.PORT || 3000
 const mercadopago = require('mercadopago');
@@ -10,6 +11,7 @@ mercadopago.configure({
     access_token: 'APP_USR-8208253118659647-112521-dd670f3fd6aa9147df51117701a2082e-677408439',
     integrator_id: 'dev_2e4ad5dd362f11eb809d0242ac130004'
 })
+app.use(bodyParser.json());
 // el front deberia de mandarme el id del usuario para jalar toda su informacion (nombre, apellido, email, telefono, identificacion, direccion)
 const comprador = {
     name: 'Lalo',
@@ -90,10 +92,11 @@ app.get('/detail', async function (req, res) {
     preference.items = [];
     preference.items.push(item);
     // no podemos poner una url que nos notifique que sea ni localhost ni 127.0.0.1 
-    // preference.notification_url = `${req.get('host')}/notificaciones_mercadopago`; // para saber que hace ver linea 57
+    preference.notification_url = `${req.get('host')}/notificaciones_mercadopago`; // para saber que hace ver linea 57
     try {
         const respuestaMP = await mercadopago.preferences.create(preference);
         console.log(respuestaMP);
+        req.query.init_point = respuestaMP.body.init_point;
     } catch (error) {
         console.error(error);
     }
@@ -113,4 +116,13 @@ app.get('/failure', function(req,res){
 app.get('/pending', function(req,res){
     res.render('pending', req.query)
 })
+
+app.post('/notificaciones_mercadopago', function(req, res){
+    console.log('Esto es el query:');
+    console.log(req.query);
+    console.log('Esto es el body:');
+    console.log(req.body);
+    res.status(200).send('received');
+})
+
 app.listen(port);
