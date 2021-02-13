@@ -5,7 +5,7 @@ const username = document.getElementById('username');
 const btnRegistrar = document.getElementById('btnIngresar');
 const login = document.getElementById('login');
 const chat = document.getElementById('chat');
-chat.style.display = "none";
+// chat.style.display = "none";
 const estado = document.getElementById('estado');
 const listaMensajes = document.getElementById('listaMensajes');
 // para poder ver si el backend esta funcionando correctamente  llamo al metodo connect
@@ -59,7 +59,7 @@ socket.on('enviar-mensajes', (mensajes)=>{
     }
 })
 socket.on('lista-usuarios', (usuarios)=>{
-    login.style.display ="none";
-    chat.style.display = "";
+    // login.style.display ="none";
+    // chat.style.display = "";
     console.log(usuarios);
 })
