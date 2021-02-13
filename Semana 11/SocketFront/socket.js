@@ -53,7 +53,7 @@ socket.on('enviar-mensajes', (mensajes)=>{
     for (const key in mensajes) {
         const mensaje = document.createElement('li');
         mensaje.className = 'list-group-item';
-        mensaje.innerText = `usuario dice: ${mensajes[key]}`;
+        mensaje.innerText = `${mensajes[key].cliente} dice: ${mensajes[key].mensaje}`;
         listaMensajes.appendChild(mensaje);
         input.value = '';
     }
