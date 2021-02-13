@@ -4,6 +4,7 @@ var exphbs  = require('express-handlebars');
 var port = process.env.PORT || 3000
 const mercadopago = require('mercadopago');
 var app = express();
+app.use(bodyParser.json());
 // primero debemos inicializar nuestra referencia de mercado pago con las tokens que nos brinda la pagina de desarroladores (una vez que saquemos la certificacion mercado pago nos dara nuestras propias tokens de acceso)
 // access_token: esta token se generar por cada establecimiento que desee integrar la pasarela de pagos de mercadopago
 // integrator_id: es el identificador de cada desarrollador certificado por mercadopago
@@ -11,7 +12,6 @@ mercadopago.configure({
     access_token: 'APP_USR-8208253118659647-112521-dd670f3fd6aa9147df51117701a2082e-677408439',
     integrator_id: 'dev_2e4ad5dd362f11eb809d0242ac130004'
 })
-app.use(bodyParser.json());
 // el front deberia de mandarme el id del usuario para jalar toda su informacion (nombre, apellido, email, telefono, identificacion, direccion)
 const comprador = {
     name: 'Lalo',
@@ -97,6 +97,8 @@ app.get('/detail', async function (req, res) {
         const respuestaMP = await mercadopago.preferences.create(preference);
         console.log(respuestaMP);
         req.query.init_point = respuestaMP.body.init_point;
+        // cuando nosotros hacemos uso del checkout PRO no podemos usar el valor auto_return 
+        req.query.id_mp = respuestaMP.body.id;
     } catch (error) {
         console.error(error);
     }
