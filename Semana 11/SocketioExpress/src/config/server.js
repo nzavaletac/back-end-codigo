@@ -30,35 +30,35 @@ module.exports = class ServerSocket {
                 }
                 usuarios.push(objUsuario);
                 // el metodo emit solamente sirve para retornarnos la emision al mismo usuario
-                cliente.emit('lista-usuarios', usuarios);
+                // cliente.emit('lista-usuarios', usuarios);
                 // si quieremos notificar a todos los clientes conectados deberemos utilizar un broadcast pero no se notificará al cliente actual
-                cliente.broadcast.emit('lista-usuarios', usuarios);
+                // cliente.broadcast.emit('lista-usuarios', usuarios);
+                this.socket.emit('lista-usuarios', usuarios)
 
             })
-            
             cliente.on('mensaje-nuevo', (mensaje)=>{
-                console.log(mensaje);
                 const usuario = usuarios.filter(usuario => usuario.id === cliente.id)[0];
                 mensajes.push({
                     cliente: usuario.username,
                     mensaje: mensaje
                 })
-                cliente.emit('enviar-mensajes',mensajes);
-                cliente.broadcast.emit('enviar-mensajes',mensajes)
+                // console.log(mensajes);
+                // cliente.emit('enviar-mensajes',mensajes);
+                // cliente.broadcast.emit('enviar-mensajes',mensajes);
+                this.socket.emit('enviar-mensajes', mensajes)
             });
             cliente.on('disconnect',(reason)=>{
                 console.log(reason);
                 console.log('Se desconecto! :(');
+                usuarios = usuarios.filter(usuario => usuario.id !== cliente.id) // sacando el usuario de la lista de usuarios conectados
+                // va a notificar a todos los usuarios conectados ya sea al que mando la accion y a los demas
+                this.socket.emit('lista-usuarios', usuarios) 
             });
+            // no es indispensable que el emit sea una reaccion a un metodo on, se puede ejecutar independientemente y este se llamara ni bien el usuario se conecte
+            this.socket.emit('lista-usuarios', usuarios) 
+            this.socket.emit('enviar-mensajes', mensajes)
         })
     }
-
-
-
-
-
-
-
     start(){
         this.httpServer.listen(this.puerto, ()=>{
             console.log(`Servidor corriendo exitosamente en el puerto ${this.puerto}`);
