@@ -10,7 +10,7 @@ const {
 
 const crearVenta = async (req, res) => {
   const miTransaccion = await conexion.transaction();
-  let { fecha, total, igv, usuario, productos } = req.body;
+  let {fecha, total, igv, usuario, productos} = req.body;
   try {
     // Pasos a realizar:
     // Validar que exista el usuario y que el producto exista
@@ -54,9 +54,9 @@ const crearVenta = async (req, res) => {
         cabeceraVentaFecha: fecha,
         cabeceraVentaTotal: total,
         cabeceraVentaIGV: igv,
-        usuario_id: usuarioEncontrado.usuarioId
+        usuario_id: usuarioEncontrado.usuarioId,
       },
-      { transaction: miTransaccion }
+      {transaction: miTransaccion}
     );
     // 3. Crear el detalle
     for (const posicion in productos) {
@@ -71,12 +71,12 @@ const crearVenta = async (req, res) => {
           producto_id: producto.productoId,
           cabventa_id: cabeceraCreada.cabeceraVentaId,
         },
-        { transaction: miTransaccion }
+        {transaction: miTransaccion}
       );
       // 5. Restar el inventario
       producto.productoCantidad =
         producto.productoCantidad - productos[posicion].cantidad;
-      producto.save({ transaction: miTransaccion });
+      producto.save({transaction: miTransaccion});
       // producto.productoCantidad -= productos[posicion].cantidad
     }
     // 7. Borrar el contenido del carrito de ese usuario USANDO TRANSACTION
@@ -95,7 +95,7 @@ const crearVenta = async (req, res) => {
             usuario_id: usuarioEncontrado.usuarioId,
           },
         },
-        { transaction: miTransaccion }
+        {transaction: miTransaccion}
       );
     }
     // 6. Devolver el resultado
@@ -106,12 +106,12 @@ const crearVenta = async (req, res) => {
       message: "La compra se realizó exitosamente",
     });
   } catch (error) {
-      await miTransaccion.rollback();
-      return res.status(500).json({
-          ok: false,
-          content: error,
-          message:'Hubo un error al realizar la venta'
-      })
+    await miTransaccion.rollback();
+    return res.status(500).json({
+      ok: false,
+      content: error,
+      message: "Hubo un error al realizar la venta",
+    });
   }
 };
 

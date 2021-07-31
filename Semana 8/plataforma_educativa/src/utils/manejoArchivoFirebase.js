@@ -1,4 +1,4 @@
-const { Storage } = require("@google-cloud/storage");
+const {Storage} = require("@google-cloud/storage");
 // Inicializo mi objeto de Firebase para poner conectarme con mi Bucket
 const credenciales = {
   projectId: "codigo-backend-eduardo",
@@ -11,7 +11,8 @@ const bucket = storage.bucket("codigo-backend-eduardo.appspot.com");
 
 const subirArchivo = (archivo) => {
   return new Promise((resolve, reject) => {
-    if (!archivo) { // es lo mismo que poner archivo === null | undefined
+    if (!archivo) {
+      // es lo mismo que poner archivo === null | undefined
       reject("No se encontro el archivo");
     }
     // Modificamos el nombre original para prevenir que el usuario pueda sobreescribir un archivo con el mismo nombre
@@ -43,9 +44,9 @@ const subirArchivo = (archivo) => {
   });
 };
 
-const eliminarArchivoFirebase = async(url)=>{
-  let subimagen =url.split('.com/')[2];
-  let imagen = subimagen.split('?')[0];
+const eliminarArchivoFirebase = async (url) => {
+  let subimagen = url.split(".com/")[2];
+  let imagen = subimagen.split("?")[0];
   // al momento de eliminar un archivo que no existe ya en firebase storage me indica por consola que no existe, como se podría controlar para indicar al cliente que se elimino de la bd pero no se encontro el archivo en el storage
   try {
     let rpta = await bucket.file(imagen).delete();
@@ -55,9 +56,9 @@ const eliminarArchivoFirebase = async(url)=>{
     console.log(error);
     return false;
   }
-}
+};
 
 module.exports = {
   subirArchivo,
-  eliminarArchivoFirebase
+  eliminarArchivoFirebase,
 };

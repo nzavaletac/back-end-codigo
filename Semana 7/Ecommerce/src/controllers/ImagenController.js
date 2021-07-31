@@ -1,4 +1,4 @@
-const { Imagen } = require("../config/Sequelize");
+const {Imagen} = require("../config/Sequelize");
 // ambas librerias vienen instaladas nativamente con nodejs y por ende solo trabajan en entorno nodejs
 // fs => libreria para el manejo de archivos dentro del proyecto, sirve para insertar, editar o eliminar archivos desde un js
 // https://nodejs.org/api/fs.html
@@ -6,13 +6,13 @@ const fs = require("fs");
 // path => sirve para devolver archivos del servidor
 // https://nodejs.org/api/path.html
 const path = require("path");
-function validarImagen(archivos){
-  //...
-}
+// function validarImagen(archivos){
+//   //...
+// }
 const subirImagen = async (req, res) => {
   try {
     //   console.log(req.files.imagen); // maneja todo el tratamiento de archivos mandados por el front
-    let { imagen } = req.files;
+    let {imagen} = req.files;
     // permitir SOLAMENTE la subida de imagenes
     // https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/String/includes
     // if (imagen && imagen.type.split('/')[0]==="image") {
@@ -53,7 +53,7 @@ const subirImagen = async (req, res) => {
 };
 
 const devolverImagenPorId = async (req, res) => {
-  let { id } = req.params;
+  let {id} = req.params;
   let imagen = await Imagen.findByPk(id);
   if (imagen) {
     // console.log(imagen);
@@ -79,8 +79,8 @@ const devolverImagenPorId = async (req, res) => {
 
 const actualizarImagen = async (req, res) => {
   // actualizar la imagen tanto en la bd con en el servidor
-  let { id } = req.params;
-  let { imagen }= req.files;
+  let {id} = req.params;
+  let {imagen} = req.files;
   // primero busco esa imagen segun su PK en la bd
   let imagenEncontrada = await Imagen.findByPk(id);
   if (imagenEncontrada) {
@@ -91,16 +91,19 @@ const actualizarImagen = async (req, res) => {
       console.log(rpta);
     }
     let nombreArchivo = imagen.path.split("\\")[2];
-    await Imagen.update({imagenURL: nombreArchivo},{
-      where:{
-        imagenId: id
+    await Imagen.update(
+      {imagenURL: nombreArchivo},
+      {
+        where: {
+          imagenId: id,
+        },
       }
-    });
+    );
     imagenEncontrada = await Imagen.findByPk(id);
     return res.json({
       ok: true,
       content: imagenEncontrada,
-      message:'Imagen actualizada con exito'
+      message: "Imagen actualizada con exito",
     });
   } else {
     return res.status(404).json({

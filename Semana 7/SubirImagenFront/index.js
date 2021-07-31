@@ -21,6 +21,7 @@ let buscarAlmacenes = () => {
       return resolve.json();
     })
     .then((data) => {
+      console.log(data);
       // console.log(data.content);
       // https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Sentencias/for...in
       for (const key in data.content) {
@@ -31,8 +32,9 @@ let buscarAlmacenes = () => {
         opcion.id = data.content[key].almacenId;
         almacenes.appendChild(opcion);
       }
-    }).catch(()=>{
-      alert("No se pudo devolver los almacenes")
+    })
+    .catch(() => {
+      alert("No se pudo devolver los almacenes");
     });
 };
 buscarAlmacenes();
@@ -43,10 +45,10 @@ buscarAlmacenes();
 let enviarImagen = () => {
   // console.log(imagen.files[0]);
   formData.append("imagen", imagen.files[0]);
-  // mas adelante 
+  // mas adelante
   var reader = new FileReader();
   reader.onload = function (e) {
-    imagenMostrar.src= e.target.result;
+    imagenMostrar.src = e.target.result;
   };
   reader.readAsDataURL(imagen.files[0]);
   // fin mas adelante
@@ -84,11 +86,11 @@ btnEnviar.addEventListener("click", async (e) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(objProducto)
+      body: JSON.stringify(objProducto),
     });
     let rptaProducto = await valueProducto.json();
 
-    alert(rptaProducto.message)
+    alert(rptaProducto.message);
     console.log(rptaProducto);
     // TAREA PARTE 3
     // una vez ingresado el producto, limpiar todos los campos
